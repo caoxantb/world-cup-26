@@ -79,10 +79,7 @@ const roundSchema = new mongoose.Schema<IRound>({
       ],
     },
   ],
-  gameplay: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Gameplay",
-  },
+  gameplay: mongoose.Schema.Types.ObjectId,
 });
 
 const Round = mongoose.model<IRound>("Round", roundSchema);

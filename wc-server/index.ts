@@ -3,11 +3,13 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import "express-async-errors";
-import { expressMiddleware } from '@apollo/server/express4';
+import cookieParser, { CookieParseOptions } from "cookie-parser";
+import { expressMiddleware } from "@apollo/server/express4";
 
 import { connectDatabase } from "./db/connection";
 import { createGraphQLServer } from "./graphql/server";
 import { errorHandler } from "./middlewares/error";
+import { authenticateUser } from "./middlewares/auth";
 
 dotenv.config();
 
@@ -16,13 +18,33 @@ const initServer = async () => {
   const httpServer = http.createServer(app);
   const PORT = process.env.PORT || 8080;
   const server = createGraphQLServer(httpServer);
+  const cookieOptions = {
+    httpOnly: true,
+    maxAge: 7 * 24 * 60 * 60 * 1000, // one week
+    path: "/",
+    sameSite: "strict",
+    secure: false,
+  };
+  const cookieSecret = process.env.COOKIE_SECRET;
 
   await connectDatabase();
   await server.start();
 
-  app.use(cors({ credentials: true, origin: true }))
+  app.set("cookieOptions", cookieOptions);
+  app.set("cookieSecret", cookieSecret);
+
+  app.use(cookieParser(cookieSecret));
+  app.use(cors({ credentials: true, origin: true }));
   app.use(express.json());
-  app.use("/", expressMiddleware(server));
+  app.use(authenticateUser);
+  app.use(
+    "/",
+    expressMiddleware(server, {
+      context: async ({ req, res }) => {
+        return { req, res };
+      },
+    })
+  );
   app.use(errorHandler);
 
   httpServer.listen(PORT, () => {

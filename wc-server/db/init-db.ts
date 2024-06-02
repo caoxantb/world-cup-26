@@ -2,10 +2,10 @@ import { z } from "zod";
 import dotenv from "dotenv";
 
 import { connectDatabase, disconnectDatabase } from "./connection";
-import { TeamStatic, MatchStatic } from "../model";
+import { TeamStatic, MatchStatic } from "../models";
 import { getMatchStaticData, getTeamStaticData } from "./scripts/get-static-db";
-import { teamStaticValidator } from "../model/teamStatic";
-import { matchStaticValidator } from "../model/matchStatic";
+import { teamStaticValidator } from "../models/teamStatic";
+import { matchStaticValidator } from "../models/matchStatic";
 
 dotenv.config();
 

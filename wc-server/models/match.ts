@@ -44,10 +44,7 @@ export const matchSchema = new mongoose.Schema<IMatch>({
   awayTeamAggs: Number,
   homeTeamPenalties: Number,
   awayTeamPenalties: Number,
-  gameplay: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Gameplay",
-  },
+  gameplay: mongoose.Schema.Types.ObjectId,
 });
 
 const Match = mongoose.model<IMatch>("Match", matchSchema);

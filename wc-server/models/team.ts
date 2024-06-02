@@ -47,10 +47,7 @@ export const teamSchema = new mongoose.Schema<ITeam>({
     },
   ],
   xGoalParams: [Number],
-  gameplay: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Gameplay",
-  },
+  gameplay: mongoose.Schema.Types.ObjectId,
 });
 
 const Team = mongoose.model<ITeam>("Team", teamSchema);

@@ -1,4 +1,4 @@
-import http from "http";
+import { Server } from "http";
 import { ApolloServer, BaseContext } from "@apollo/server";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import { makeExecutableSchema } from "@graphql-tools/schema";
@@ -9,7 +9,7 @@ import typeDefs from "./typeDefs";
 import resolvers from "./resolvers";
 
 export const createGraphQLServer = (
-  httpServer: http.Server
+  httpServer: Server
 ): ApolloServer<BaseContext> => {
   const schema = makeExecutableSchema({ typeDefs, resolvers });
   const serverCleanup = useServer(

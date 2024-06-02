@@ -2,12 +2,12 @@ import gql from "graphql-tag"
 
 const gameplayTypeDefs = gql`
   extend type Query {
-    # current rounds playing in the game based on current date.
+    getCurrentGameplay: Gameplay
   }
 
   type Gameplay {
-    _id: ID!;
-    currentDate: Date!;
+    _id: ID!
+    currentDate: Date!
   }
 `
 
