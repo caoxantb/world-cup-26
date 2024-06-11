@@ -4,18 +4,22 @@ const teamTypeDefs = gql`
   scalar Date
 
   extend type Query {
-    #
+    getAllTeams: [Team]
+  }
+
+  extend type Mutation {
+    createAllTeams: String
   }
 
   type Team {
     _id: ID!
     code: String!
-    pastFIFARankings: [PastRankings!]!
-    currentFIFAPoints: Int!
-    currentFIFARanking: Int!
+    currentFIFAPoints: Float!
     isHost: Boolean!
-    xGoalData: [XGoalData!]!
-    xGoalParams: [Float!]!
+    xGoalData: XGoalData!
+    xGoalForParams: [Float!]!
+    xGoalAgainstParams: [Float!]!
+    federation: String!
     gameplay: ID!
   }
 
@@ -26,10 +30,10 @@ const teamTypeDefs = gql`
     flag: String!
     logo: String!
     kits: Kits!
-    pastFIFARankings: [PastRankings!]!
+    currentFIFAPoints: Float!
     pastWorldCupStats: [PastWorldCupStats!]!
     initialUEFARanking: Int!
-    xGoalData: [XGoalData!]!
+    xGoalData: XGoalData!
     homeStadium: String!
     federation: String!
   }
@@ -39,20 +43,19 @@ const teamTypeDefs = gql`
     awayKit: String!
   }
 
-  type PastRankings {
-    date: Date!
-    position: Int!
-  }
-
   type PastWorldCupStats {
     year: Int!
     place: String!
   }
 
   type XGoalData {
-    thenFIFARanking: Int!
-    thenOpponentFIFARanking: Int!
-    goalsScored: Int!
+    numberOfDataPoints: Int!
+    sumRankDiff: Int!
+    sumGoalsScored: Int!
+    sumGoalsConceded: Int!
+    sumRankDiffSquare: Int!
+    sumDotScored: Int!
+    sumDotConceded: Int!
   }
 `;
 

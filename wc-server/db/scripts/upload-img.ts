@@ -1,8 +1,8 @@
 import axios from "axios";
-import { JSDOM } from "jsdom";
-import pLimit from "p-limit";
 import { v2 as cloudinary } from "cloudinary";
 import dotenv from "dotenv";
+import { JSDOM } from "jsdom";
+import pLimit from "p-limit";
 
 import { readFIFARankingsData } from "./get-country-data";
 
@@ -39,7 +39,9 @@ const checkImageValidity = async (
   };
 
   const srcFeds = feds[countryToFeds[code]];
-  const srcCode = codeDiff.hasOwnProperty(code) ? codeDiff[code] : code;
+  const srcCode = Object.prototype.hasOwnProperty.call(codeDiff, code)
+    ? codeDiff[code]
+    : code;
   const srcCodeFix = ["LIB", "MRS"].includes(srcCode) ? code : srcCode;
   const srcLower =
     countryToFeds[code] !== "UEFA" ? srcCode.toLowerCase() : srcCode;
@@ -107,7 +109,10 @@ const uploadFlagsAndLogos = async (countries: { [key: string]: string }) => {
 
   const promises = Object.keys(countries).map((key) => {
     return limit(async () => {
-      const countryName = countriesDiffName.hasOwnProperty(key)
+      const countryName = Object.prototype.hasOwnProperty.call(
+        countriesDiffName,
+        key
+      )
         ? countriesDiffName[key]
         : key;
 

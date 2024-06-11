@@ -1,16 +1,19 @@
 import mongoose from "mongoose";
 import { z } from "zod";
 
-const roundValidator = z.object({
+export const roundValidator = z.object({
   code: z.string().optional(),
   name: z.string(),
   type: z.enum(["knockout", "round-robin"]),
   isTwoLegs: z.boolean(),
-  matches: z.array(z.instanceof(mongoose.Schema.Types.ObjectId)),
+  matches: z.array(z.instanceof(mongoose.Types.ObjectId)),
   teams: z.array(
     z.object({
-      name: z.string(),
-      status: z.enum(["advanced", "eliminated", "undetermined"]),
+      team: z.string(),
+      qualifiedDate: z.date().default(new Date("2023-07-31")),
+      status: z
+        .enum(["advanced", "eliminated", "undetermined"])
+        .default("undetermined"),
       advancedTo: z.string().optional(),
     })
   ),
@@ -36,7 +39,7 @@ const roundValidator = z.object({
       })
     )
     .optional(),
-  gameplay: z.instanceof(mongoose.Schema.Types.ObjectId),
+  gameplay: z.instanceof(mongoose.Types.ObjectId),
 });
 
 type IRound = z.infer<typeof roundValidator>;
@@ -54,7 +57,8 @@ const roundSchema = new mongoose.Schema<IRound>({
   ],
   teams: [
     {
-      name: String,
+      team: String,
+      qualifiedDate: Date,
       status: String,
       advancedTo: String,
     },

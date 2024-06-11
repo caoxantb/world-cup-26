@@ -2,13 +2,17 @@ import mongoose from "mongoose";
 import { z } from "zod";
 
 const gameplayValidator = z.object({
-  currentDate: z.date().default(new Date("2023-07-21")),
+  name: z.string(),
+  ingameCurrentDate: z.date().default(new Date("2023-07-21")),
+  user: z.instanceof(mongoose.Types.ObjectId),
 });
 
 type IGameplay = z.infer<typeof gameplayValidator>;
 
 const gameplaySchema = new mongoose.Schema<IGameplay>({
-  currentDate: Date,
+  name: String,
+  ingameCurrentDate: Date,
+  user: mongoose.Schema.Types.ObjectId,
 });
 
 const Gameplay = mongoose.model<IGameplay>("Gameplay", gameplaySchema);

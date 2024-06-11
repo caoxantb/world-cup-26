@@ -1,15 +1,15 @@
-import http from "http";
-import express from "express";
-import dotenv from "dotenv";
-import cors from "cors";
-import "express-async-errors";
-import cookieParser, { CookieParseOptions } from "cookie-parser";
 import { expressMiddleware } from "@apollo/server/express4";
+import cookieParser, { CookieParseOptions } from "cookie-parser";
+import cors from "cors";
+import dotenv from "dotenv";
+import express from "express";
+import http from "http";
+import "express-async-errors";
 
 import { connectDatabase } from "./db/connection";
 import { createGraphQLServer } from "./graphql/server";
-import { errorHandler } from "./middlewares/error";
 import { authenticateUser } from "./middlewares/auth";
+import { errorHandler } from "./middlewares/error";
 
 dotenv.config();
 

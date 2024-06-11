@@ -1,6 +1,6 @@
+import _ from "lodash";
 import mongoose from "mongoose";
 import { z } from "zod";
-import _ from "lodash";
 
 import { matchSchema, matchValidator } from "./match";
 

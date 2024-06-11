@@ -1,12 +1,12 @@
 import fs from "fs";
 import readline from "readline";
 
+import { readFIFARankingsData } from "./get-country-data.js";
+import { readXGoalData } from "./get-x-goals.js";
 import {
   scrapeInitialNationsLeagueRanking,
   scrapeWorldCupStats,
 } from "./scrape-stats.js";
-import { readFIFARankingsData } from "./get-country-data.js";
-import { readXGoalData } from "./get-x-goals.js";
 
 export const getTeamStaticData = async () => {
   const IMG_BASE =
@@ -19,7 +19,7 @@ export const getTeamStaticData = async () => {
       encoding: "utf8",
     })
   );
-  const { fifaRankings, countryCodes, federations } =
+  const { fifaRankings, currentPoints, countryCodes, federations } =
     await readFIFARankingsData();
   const xGoalStats = await readXGoalData();
 
@@ -34,8 +34,11 @@ export const getTeamStaticData = async () => {
         homeKit: `${IMG_BASE}/kits/${code}_home`,
         awayKit: `${IMG_BASE}/kits/${code}_away`,
       },
-      pastFIFARankings: fifaRankings[code],
-      pastWorldCupStats: worldCupStats.hasOwnProperty(code)
+      currentFIFAPoints: currentPoints[code],
+      pastWorldCupStats: Object.prototype.hasOwnProperty.call(
+        worldCupStats,
+        code
+      )
         ? worldCupStats[code]
         : [],
       initialUEFARanking: nationsLeagueRanking[code],
@@ -46,8 +49,13 @@ export const getTeamStaticData = async () => {
   });
 
   fs.writeFileSync("./db/json/teams.json", JSON.stringify(finalData), "utf8");
-  
-  return finalData;
+  fs.writeFileSync(
+    "./db/json/rankings.json",
+    JSON.stringify(fifaRankings),
+    "utf8"
+  );
+
+  return { finalData, fifaRankings };
 };
 
 export const getMatchStaticData: () => Promise<

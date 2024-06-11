@@ -20,7 +20,7 @@ export const matchValidator = z.object({
   awayTeamAggs: z.number().int().optional(),
   homeTeamPenalties: z.number().int().optional(),
   awayTeamPenalties: z.number().int().optional(),
-  gameplay: z.instanceof(mongoose.Schema.Types.ObjectId),
+  gameplay: z.instanceof(mongoose.Types.ObjectId),
 });
 
 type IMatch = z.infer<typeof matchValidator>;

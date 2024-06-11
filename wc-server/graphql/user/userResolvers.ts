@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { Request, Response } from "express";
+import jwt from "jsonwebtoken";
 
 import { User } from "../../models";
 import { BadRequest, Unauthorized } from "../../utils/httpError";
@@ -9,15 +9,19 @@ import { BadRequest, Unauthorized } from "../../utils/httpError";
 dotenv.config();
 
 export const userQueries = {
-  getCurrentUser: async (parents: undefined, args: {}, context: {req: Request, res: Response}) => {
+  getCurrentUser: async (
+    parents: undefined,
+    args: Record<string, never>,
+    context: { req: Request; res: Response }
+  ) => {
     if (context.req.user) {
-      const {email} = context.req.user;
+      const { email } = context.req.user;
       const user = await User.findOne({ email });
       return user || null;
     }
-    return null;    
-  }
-}
+    return null;
+  },
+};
 
 export const userMutations = {
   signupWithPassword: async (
@@ -105,7 +109,7 @@ export const userMutations = {
   },
   logout: (
     parents: undefined,
-    args: {},
+    args: Record<string, never>,
     context: { req: Request; res: Response }
   ) => {
     if (!context.req.user) {

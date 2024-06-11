@@ -10,27 +10,23 @@ export const teamStaticValidator = z.object({
     homeKit: z.string().url(),
     awayKit: z.string().url(),
   }),
-  pastFIFARankings: z.array(
-    z.object({
-      date: z.date().min(new Date("1992-12-31")),
-      position: z.number().int().min(1).max(211),
-    })
-  ),
+  currentFIFAPoints: z.number(),
+  initialUEFARanking: z.number().int().min(1).max(55).optional(),
   pastWorldCupStats: z.array(
     z.object({
       year: z.number().int().min(1930).max(2022),
       place: z.string(),
     })
   ),
-  initialUEFARanking: z.number().int().min(1).max(55).optional(),
-  xGoalData: z.array(
-    z.object({
-      thenFIFARanking: z.number().int().min(1).max(211),
-      thenOpponentFIFARanking: z.number().int().min(1).max(211),
-      goalsScored: z.number().int().nonnegative(),
-      goalsConceded: z.number().int().nonnegative(),
-    })
-  ),
+  xGoalData: z.object({
+    numberOfDataPoints: z.number().int(),
+    sumRankDiff: z.number().int(),
+    sumGoalsScored: z.number().int(),
+    sumGoalsConceded: z.number().int(),
+    sumRankDiffSquare: z.number().int(),
+    sumDotScored: z.number().int(),
+    sumDotConceded: z.number().int(),
+  }),
   homeStadium: z.string(),
   federation: z.string(),
 });
@@ -46,24 +42,26 @@ const teamStaticSchema = new mongoose.Schema<ITeamStatic>({
     homeKit: String,
     awayKit: String,
   },
-  pastFIFARankings: [
-    {
-      date: Date,
-      position: Number,
-    },
-  ],
-  pastWorldCupStats: [{ year: Number, place: String }],
+  currentFIFAPoints: Number,
   initialUEFARanking: Number,
-  xGoalData: [
-    {
-      thenFIFARanking: Number,
-      thenOpponentFIFARanking: Number,
-      goalsScored: Number,
-      goalsConceded: Number,
-    },
-  ],
+  pastWorldCupStats: [{ year: Number, place: String }],
+  xGoalData: {
+    numberOfDataPoints: Number,
+    sumRankDiff: Number,
+    sumGoalsScored: Number,
+    sumGoalsConceded: Number,
+    sumRankDiffSquare: Number,
+    sumDotScored: Number,
+    sumDotConceded: Number,
+  },
   homeStadium: String,
   federation: String,
+});
+
+teamStaticSchema.index({
+  federation: 1,
+  initialUEFARanking: 1,
+  currentFIFAPoints: -1,
 });
 
 const TeamStatic = mongoose.model<ITeamStatic>("TeamStatic", teamStaticSchema);

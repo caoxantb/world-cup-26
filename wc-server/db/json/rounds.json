@@ -1,0 +1,288 @@
+[
+  {
+    "code": "AFC-1st",
+    "name": "AFC 2026 World Cup Qualification - First Round",
+    "type": "knockout",
+    "isTwoLegs": true,
+    "numberOfTeams": 20,
+    "initTeamsRange": [26, 46]
+  },
+  {
+    "code": "AFC-2nd",
+    "name": "AFC 2026 World Cup Qualification - Second Round",
+    "type": "round-robin",
+    "isTwoLegs": true,
+    "numberOfTeams": 36,
+    "numberOfGroups": 9,
+    "initTeamsRange": [0, 26]
+  },
+  {
+    "code": "AFC-3rd",
+    "name": "AFC 2026 World Cup Qualification - Third Round",
+    "type": "round-robin",
+    "isTwoLegs": true,
+    "numberOfTeams": 18,
+    "numberOfGroups": 3
+  },
+  {
+    "code": "AFC-4th",
+    "name": "AFC 2026 World Cup Qualification - Fourth Round",
+    "type": "round-robin",
+    "isTwoLegs": true,
+    "numberOfTeams": 6,
+    "numberOfGroups": 2
+  },
+  {
+    "code": "AFC-5th",
+    "name": "AFC 2026 World Cup Qualification - Fifth Round",
+    "type": "knockout",
+    "isTwoLegs": true,
+    "numberOfTeams": 2
+  },
+  {
+    "code": "CAF-1st",
+    "name": "CAF 2026 World Cup Qualification - First Round",
+    "type": "round-robin",
+    "isTwoLegs": true,
+    "numberOfTeams": 54,
+    "numberOfGroups": 9,
+    "initTeamsRange": [0, 54]
+  },
+  {
+    "code": "CAF-PO-SF",
+    "name": "CAF 2026 World Cup Qualification - Playoff Semi Finals",
+    "type": "knockout",
+    "isTwoLegs": false,
+    "numberOfTeams": 4
+  },
+  {
+    "code": "CAF-PO-F",
+    "name": "CAF 2026 World Cup Qualification - Playoff Final",
+    "type": "knockout",
+    "isTwoLegs": false,
+    "numberOfTeams": 2
+  },
+  {
+    "code": "CONCACAF-1st",
+    "name": "CONCACAF 2026 World Cup Qualification - First Round",
+    "type": "knockout",
+    "isTwoLegs": true,
+    "numberOfTeams": 4,
+    "initTeamsRange": [28, 32]
+  },
+  {
+    "code": "CONCACAF-2nd",
+    "name": "CONCACAF 2026 World Cup Qualification - Second Round",
+    "type": "round-robin",
+    "isTwoLegs": false,
+    "numberOfTeams": 30,
+    "numberOfGroups": 6,
+    "initTeamsRange": [0, 28]
+  },
+  {
+    "code": "CONCACAF-3rd",
+    "name": "CONCACAF 2026 World Cup Qualification - Third Round",
+    "type": "round-robin",
+    "isTwoLegs": true,
+    "numberOfTeams": 12,
+    "numberOfGroups": 3
+  },
+  {
+    "code": "CONMEBOL-GS",
+    "name": "CONMEBOL 2026 World Cup Qualification - Group Stage",
+    "type": "round-robin",
+    "isTwoLegs": true,
+    "numberOfTeams": 10,
+    "numberOfGroups": 1,
+    "initTeamsRange": [0, 10]
+  },
+  {
+    "code": "OFC-PRE-SF",
+    "name": "OFC 2026 World Cup Qualification - Preliminary Semi Finals",
+    "type": "knockout",
+    "isTwoLegs": false,
+    "numberOfTeams": 4,
+    "initTeamsRange": [7, 11]
+  },
+  {
+    "code": "OFC-PRE-F",
+    "name": "OFC 2026 World Cup Qualification - Preliminary Final",
+    "type": "knockout",
+    "isTwoLegs": false,
+    "numberOfTeams": 2
+  },
+  {
+    "code": "OFC-1st",
+    "name": "OFC 2026 World Cup Qualification - First Round",
+    "type": "round-robin",
+    "isTwoLegs": true,
+    "numberOfTeams": 8,
+    "numberOfGroups": 2,
+    "initTeamsRange": [0, 7]
+  },
+  {
+    "code": "OFC-2nd-SF",
+    "name": "OFC 2026 World Cup Qualification - Second Round Semi Finals",
+    "type": "knockout",
+    "isTwoLegs": false,
+    "numberOfTeams": 4
+  },
+  {
+    "code": "OFC-2nd-F",
+    "name": "OFC 2026 World Cup Qualification - Second Round Final",
+    "type": "knockout",
+    "isTwoLegs": false,
+    "numberOfTeams": 2
+  },
+  {
+    "code": "UEFA-NL-A",
+    "name": "UEFA 2026 World Cup Qualification - Nations League A",
+    "type": "round-robin",
+    "isTwoLegs": true,
+    "numberOfTeams": 16,
+    "numberOfGroups": 4,
+    "initTeamsRange": [0, 16]
+  },
+  {
+    "code": "UEFA-NL-B",
+    "name": "UEFA 2026 World Cup Qualification - Nations League B",
+    "type": "round-robin",
+    "isTwoLegs": true,
+    "numberOfTeams": 16,
+    "numberOfGroups": 4,
+    "initTeamsRange": [16, 32]
+  },
+  {
+    "code": "UEFA-NL-C",
+    "name": "UEFA 2026 World Cup Qualification - Nations League C",
+    "type": "round-robin",
+    "isTwoLegs": true,
+    "numberOfTeams": 16,
+    "numberOfGroups": 4,
+    "initTeamsRange": [32, 48]
+  },
+  {
+    "code": "UEFA-NL-D",
+    "name": "UEFA 2026 World Cup Qualification - Nations League D",
+    "type": "round-robin",
+    "isTwoLegs": true,
+    "numberOfTeams": 7,
+    "numberOfGroups": 2,
+    "initTeamsRange": [48, 55]
+  },
+  {
+    "code": "UEFA-NL-PO",
+    "name": "OFC 2026 World Cup Qualification - Nations League Playoff",
+    "type": "knockout",
+    "isTwoLegs": true,
+    "numberOfTeams": 20
+  },
+  {
+    "code": "UEFA-NL-QF",
+    "name": "OFC 2026 World Cup Qualification - Nations League Quarter Finals",
+    "type": "knockout",
+    "isTwoLegs": true,
+    "numberOfTeams": 8
+  },
+  {
+    "code": "UEFA-NL-SF",
+    "name": "OFC 2026 World Cup Qualification - Nations League Semi Finals",
+    "type": "knockout",
+    "isTwoLegs": false,
+    "numberOfTeams": 4
+  },
+  {
+    "code": "UEFA-NL-F",
+    "name": "OFC 2026 World Cup Qualification - Nations League Final",
+    "type": "knockout",
+    "isTwoLegs": false,
+    "numberOfTeams": 2
+  },
+  {
+    "code": "UEFA-GS",
+    "name": "OFC 2026 World Cup Qualification - Group Stage",
+    "type": "round-robin",
+    "isTwoLegs": true,
+    "numberOfTeams": 55,
+    "numberOfGroups": 12,
+    "initTeamsRange": [0, 55]
+  },
+  {
+    "code": "UEFA-PO-SF",
+    "name": "OFC 2026 World Cup Qualification - Playoff Semi Finals",
+    "type": "knockout",
+    "isTwoLegs": false,
+    "numberOfTeams": 16
+  },
+  {
+    "code": "UEFA-PO-F",
+    "name": "OFC 2026 World Cup Qualification - Playoff Finals",
+    "type": "knockout",
+    "isTwoLegs": false,
+    "numberOfTeams": 8
+  },
+  {
+    "code": "FIFA-INTERKO-SF",
+    "name": "FIFA 2026 World Cup Qualification - International Knockout Semi Finals",
+    "type": "knockout",
+    "isTwoLegs": false,
+    "numberOfTeams": 4
+  },
+  {
+    "code": "FIFA-INTERKO-F",
+    "name": "FIFA 2026 World Cup Qualification - International Knockout Finals",
+    "type": "knockout",
+    "isTwoLegs": false,
+    "numberOfTeams": 4
+  },
+  {
+    "code": "FIFA-WC-GS",
+    "name": "FIFA 2026 World Cup - Group Stage",
+    "type": "round-robin",
+    "isTwoLegs": false,
+    "numberOfTeams": 48,
+    "numberOfGroups": 12
+  },
+  {
+    "code": "FIFA-WC-R32",
+    "name": "FIFA 2026 World Cup - Round of 32",
+    "type": "knockout",
+    "isTwoLegs": false,
+    "numberOfTeams": 32
+  },
+  {
+    "code": "FIFA-WC-R16",
+    "name": "FIFA 2026 World Cup - Round of 16",
+    "type": "knockout",
+    "isTwoLegs": false,
+    "numberOfTeams": 16
+  },
+  {
+    "code": "FIFA-WC-QF",
+    "name": "FIFA 2026 World Cup - Quarter Finals",
+    "type": "knockout",
+    "isTwoLegs": false,
+    "numberOfTeams": 8
+  },
+  {
+    "code": "FIFA-WC-SF",
+    "name": "FIFA 2026 World Cup - Semi Finals",
+    "type": "knockout",
+    "isTwoLegs": false,
+    "numberOfTeams": 4
+  },
+  {
+    "code": "FIFA-WC-3P",
+    "name": "FIFA 2026 World Cup - Third Place Playoff",
+    "type": "knockout",
+    "isTwoLegs": false,
+    "numberOfTeams": 2
+  },
+  {
+    "code": "FIFA-WC-F",
+    "name": "FIFA 2026 World Cup - Final",
+    "type": "knockout",
+    "isTwoLegs": false,
+    "numberOfTeams": 2
+  }
+]

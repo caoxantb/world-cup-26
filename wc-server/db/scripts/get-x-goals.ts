@@ -1,22 +1,30 @@
 import fs from "fs";
 import readline from "readline";
 
+type XGoalData = {
+  numberOfDataPoints: number;
+  sumRankDiff: number;
+  sumGoalsScored: number;
+  sumGoalsConceded: number;
+  sumRankDiffSquare: number;
+  sumDotScored: number;
+  sumDotConceded: number;
+};
+
+const sumObjectFields = (obj1: XGoalData, obj2: XGoalData) => {
+  return Object.keys(obj2).reduce((acc: XGoalData, cur: string) => {
+    const key = cur as keyof XGoalData;
+    acc[key] = obj1 ? obj1[key] + obj2[key] : obj2[key];
+    return acc;
+  }, {} as XGoalData);
+};
+
 export const readXGoalData: () => Promise<{
-  [key: string]: {
-    thenFIFARanking: number;
-    thenOpponentFIFARanking: number;
-    goalsScored: number;
-    goalsConceded: number;
-  }[];
+  [key: string]: XGoalData;
 }> = () => {
   return new Promise((resolve, reject) => {
-    const xGoalStats: {
-      [key: string]: {
-        thenFIFARanking: number;
-        thenOpponentFIFARanking: number;
-        goalsScored: number;
-        goalsConceded: number;
-      }[];
+    const xGoalData: {
+      [key: string]: XGoalData;
     } = {};
 
     const rl = readline.createInterface({
@@ -30,38 +38,53 @@ export const readXGoalData: () => Promise<{
     let header = true;
 
     rl.on("line", (line) => {
-      const [date, homeTeam, awayTeam, homeGoals, awayGoals, ...rest] =
-        line.split(",");
+      const [
+        _date,
+        homeTeam,
+        awayTeam,
+        homeGoals,
+        awayGoals,
+        _tournament,
+        _city,
+        _country,
+        _neutral,
+        homeTeamRank,
+        awayTeamRank,
+      ] = line.split(",");
       if (header) {
         header = false;
         return;
       }
 
+      const rankDiffHomeTeam = parseInt(homeTeamRank) - parseInt(awayTeamRank);
+      const rankDiffAwayTeam = parseInt(awayTeamRank) - parseInt(homeTeamRank);
+
       const homeTeamData = {
-        thenFIFARanking: parseInt(rest[rest.length - 2]),
-        thenOpponentFIFARanking: parseInt(rest[rest.length - 1]),
-        goalsScored: parseInt(homeGoals),
-        goalsConceded: parseInt(awayGoals),
+        numberOfDataPoints: 1,
+        sumRankDiff: rankDiffHomeTeam,
+        sumGoalsScored: parseInt(homeGoals),
+        sumGoalsConceded: parseInt(awayGoals),
+        sumRankDiffSquare: rankDiffHomeTeam ** 2,
+        sumDotScored: rankDiffHomeTeam * parseInt(homeGoals),
+        sumDotConceded: rankDiffHomeTeam * parseInt(awayGoals),
       };
 
       const awayTeamData = {
-        thenFIFARanking: parseInt(rest[rest.length - 1]),
-        thenOpponentFIFARanking: parseInt(rest[rest.length - 2]),
-        goalsScored: parseInt(awayGoals),
-        goalsConceded: parseInt(homeGoals),
+        numberOfDataPoints: 1,
+        sumRankDiff: rankDiffAwayTeam,
+        sumGoalsScored: parseInt(awayGoals),
+        sumGoalsConceded: parseInt(homeGoals),
+        sumRankDiffSquare: rankDiffAwayTeam ** 2,
+        sumDotScored: rankDiffAwayTeam * parseInt(awayGoals),
+        sumDotConceded: rankDiffAwayTeam * parseInt(homeGoals),
       };
 
-      xGoalStats.hasOwnProperty(homeTeam)
-        ? xGoalStats[homeTeam].push(homeTeamData)
-        : (xGoalStats[homeTeam] = [homeTeamData]);
-
-      xGoalStats.hasOwnProperty(awayTeam)
-        ? xGoalStats[awayTeam].push(awayTeamData)
-        : (xGoalStats[awayTeam] = [awayTeamData]);
+      xGoalData[homeTeam] = sumObjectFields(xGoalData[homeTeam], homeTeamData);
+      xGoalData[awayTeam] = sumObjectFields(xGoalData[awayTeam], awayTeamData);
     });
 
     rl.on("close", () => {
-      resolve(xGoalStats);
+      resolve(xGoalData);
     });
 
     rl.on("error", (error) => {

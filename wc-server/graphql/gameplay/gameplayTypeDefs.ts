@@ -5,6 +5,10 @@ const gameplayTypeDefs = gql`
     getCurrentGameplay: Gameplay
   }
 
+  extend type Mutation {
+    createNewGameplay(name: String!): String
+  }
+
   type Gameplay {
     _id: ID!
     currentDate: Date!

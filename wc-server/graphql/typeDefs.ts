@@ -25,8 +25,8 @@ const typeDefs = [
   // federationTypeDefs,
   gameplayTypeDefs,
   // matchTypeDefs,
-  // roundTypeDefs,
-  // teamTypeDefs,
+  roundTypeDefs,
+  teamTypeDefs,
   userTypeDefs,
 ];
 

@@ -45,9 +45,9 @@ export const scrapeWorldCupStats = async () => {
     const data = row.querySelectorAll("td");
     let code;
 
-    if (!!data.length) {
+    if (data.length) {
       let index: number = 0;
-      let pastWorldCupStats: { place: string; year: number }[] = [];
+      const pastWorldCupStats: { place: string; year: number }[] = [];
       code = data[0].id;
 
       [...data].slice(1).forEach((td) => {

@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { Forbidden } from "../utils/httpError";
+
 import { User } from "../models";
+import { Forbidden } from "../utils/httpError";
 
 export const authenticateUser = async (
   req: Request,

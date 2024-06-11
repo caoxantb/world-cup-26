@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+
 import { InternalServerError } from "../utils/httpError";
 
 export const connectDatabase = async (): Promise<void> => {

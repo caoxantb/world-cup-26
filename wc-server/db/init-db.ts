@@ -1,45 +1,44 @@
-import { z } from "zod";
 import dotenv from "dotenv";
+import mongoose from "mongoose";
+import { z } from "zod";
 
 import { connectDatabase, disconnectDatabase } from "./connection";
-import { TeamStatic, MatchStatic } from "../models";
 import { getMatchStaticData, getTeamStaticData } from "./scripts/get-static-db";
-import { teamStaticValidator } from "../models/teamStatic";
+import { TeamStatic, MatchStatic, Ranking } from "../models";
 import { matchStaticValidator } from "../models/matchStatic";
+import { rankingValidator } from "../models/ranking";
+import { teamStaticValidator } from "../models/teamStatic";
 
 dotenv.config();
+
+const initCollection = async (
+  collection: mongoose.Model<any>,
+  name: string,
+  data: unknown,
+  validator: z.AnyZodObject
+) => {
+  const dataValidated = z.array(validator).safeParse(data);
+  if (!dataValidated.success) {
+    console.error(dataValidated.error);
+    return;
+  }
+  await collection.deleteMany();
+  const dataInit = await collection.insertMany(dataValidated.data);
+  console.log(
+    `Created and inserted ${dataInit.length} documents to ${name} collection.`
+  );
+};
 
 (async () => {
   await connectDatabase();
   try {
-    const teams = await getTeamStaticData();
-    const teamStaticValidation = z.array(teamStaticValidator).safeParse(teams);
-    if (!teamStaticValidation.success) {
-      console.error(teamStaticValidation.error);
-      return;
-    }
-
+    const { finalData: teams, fifaRankings: rankings } =
+      await getTeamStaticData();
     const matches = await getMatchStaticData();
-    const matchStaticValidation = z
-      .array(matchStaticValidator)
-      .safeParse(matches);
-    if (!matchStaticValidation.success) {
-      console.error(matchStaticValidation.error);
-      return;
-    }
 
-    await TeamStatic.deleteMany();
-    await MatchStatic.deleteMany();
-
-    const teamStaticInit = await TeamStatic.insertMany(teams);
-    console.log(
-      `Created and inserted ${teamStaticInit.length} documents to TeamStatic collection.`
-    );
-
-    const matchStaticInit = await MatchStatic.insertMany(matches);
-    console.log(
-      `Created and inserted ${matchStaticInit.length} documents to MatchStatic collection.`
-    );
+    await initCollection(TeamStatic, "TeamStatic", teams, teamStaticValidator);
+    await initCollection(Ranking, "Ranking", rankings, rankingValidator);
+    // await initCollection(MatchStatic, matches, matchStaticValidator);
   } catch (err) {
     console.error(err);
   } finally {
