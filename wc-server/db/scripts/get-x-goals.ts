@@ -50,7 +50,9 @@ export const readXGoalData: () => Promise<{
         _neutral,
         homeTeamRank,
         awayTeamRank,
-      ] = line.split(",");
+      ] = line
+        .split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/)
+        .map((part) => part.trim());
       if (header) {
         header = false;
         return;

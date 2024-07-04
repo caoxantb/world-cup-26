@@ -26,6 +26,9 @@ dependencies:
   cors:
     specifier: ^2.8.5
     version: 2.8.5
+  dataloader:
+    specifier: ^2.2.2
+    version: 2.2.2
   dotenv:
     specifier: ^16.4.1
     version: 16.4.1
@@ -38,6 +41,9 @@ dependencies:
   graphql:
     specifier: ^16.8.1
     version: 16.8.1
+  graphql-scalars:
+    specifier: ^1.23.0
+    version: 1.23.0(graphql@16.8.1)
   graphql-tag:
     specifier: ^2.12.6
     version: 2.12.6(graphql@16.8.1)
@@ -1400,6 +1406,10 @@ packages:
       is-data-view: 1.0.1
     dev: true
 
+  /dataloader@2.2.2:
+    resolution: {integrity: sha512-8YnDaaf7N3k/q5HnTJVuzSyLETjoZjVmHc4AeKAzOvKHEFQKcn64OKBfzHYtE9zGjctNM7V9I0MfnUVLpi7M5g==}
+    dev: false
+
   /debug@2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
     peerDependencies:
@@ -2160,6 +2170,16 @@ packages:
   /graphemer@1.4.0:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
     dev: true
+
+  /graphql-scalars@1.23.0(graphql@16.8.1):
+    resolution: {integrity: sha512-YTRNcwitkn8CqYcleKOx9IvedA8JIERn8BRq21nlKgOr4NEcTaWEG0sT+H92eF3ALTFbPgsqfft4cw+MGgv0Gg==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+    dependencies:
+      graphql: 16.8.1
+      tslib: 2.6.2
+    dev: false
 
   /graphql-tag@2.12.6(graphql@16.8.1):
     resolution: {integrity: sha512-FdSNcu2QQcWnM2VNvSCCDCVS5PpPqpzgFT8+GXzqJuoDd0CBncxCY278u4mhRO7tMgo2JjgJA5aZ+nWSQ/Z+xg==}

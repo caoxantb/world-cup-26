@@ -10,7 +10,7 @@ export const teamStaticValidator = z.object({
     homeKit: z.string().url(),
     awayKit: z.string().url(),
   }),
-  currentFIFAPoints: z.number(),
+  initialFIFAPoints: z.number(),
   initialUEFARanking: z.number().int().min(1).max(55).optional(),
   pastWorldCupStats: z.array(
     z.object({
@@ -42,7 +42,7 @@ const teamStaticSchema = new mongoose.Schema<ITeamStatic>({
     homeKit: String,
     awayKit: String,
   },
-  currentFIFAPoints: Number,
+  initialFIFAPoints: Number,
   initialUEFARanking: Number,
   pastWorldCupStats: [{ year: Number, place: String }],
   xGoalData: {

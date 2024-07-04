@@ -5,13 +5,48 @@ import { z } from "zod";
 
 import { Ranking, Team, TeamStatic } from "../../models";
 import { teamValidator } from "../../models/team";
-import { BadRequest } from "../../utils/httpError";
-import { linearFit } from "../../utils/linearXGoal";
+import { BadRequest, NotFound } from "../../utils/httpError";
+import { linearFit } from "../../utils/teamUtils";
+
+export const teamTransforms = {
+  currentFIFARanking: async (parents: { code: string; gameplay: string }) => {
+    const { code, gameplay } = parents;
+
+    const ranking = await Ranking.findOne({
+      team: code,
+      $or: [{ gameplay }, { gameplay: { $exists: false } }],
+    })
+      .sort({ date: -1 })
+      .lean();
+
+    return ranking?.position;
+  },
+};
 
 export const teamQueries = {
-  getAllTeams: async () => {
-    const ranking = await Ranking.find({ team: "ENG" });
-    console.log(ranking);
+  teamData: async (
+    parents: undefined,
+    args: { code: string; gameplay: string }
+  ) => {
+    const { code, gameplay } = args;
+
+    const team = await Team.findOne({ code, gameplay })
+      .select("currentFIFAPoints")
+      .lean();
+    const teamStatic = await TeamStatic.findOne({ code })
+      .select("name flag logo kits federation pastWorldCupStats homeStadium")
+      .lean();
+
+    if (team && teamStatic) {
+      return {
+        ...team,
+        ...teamStatic,
+        code,
+        gameplay,
+      };
+    }
+
+    throw new NotFound("Team not found.");
   },
 };
 
@@ -32,11 +67,12 @@ export const teamMutations = {
       })
     );
     const teams = teamsStatic.map((team: any) => {
-      const { code, xGoalData, federation, currentFIFAPoints } = team;
+      const { code, xGoalData, federation, initialFIFAPoints } = team;
+      console.log(team);
       const [xGoalForParams, xGoalAgainstParams] = linearFit(xGoalData);
       return {
         code,
-        currentFIFAPoints,
+        currentFIFAPoints: initialFIFAPoints,
         isHost: ["USA", "CAN", "MEX"].includes(code),
         xGoalData,
         xGoalForParams,

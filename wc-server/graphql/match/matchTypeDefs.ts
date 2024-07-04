@@ -1,12 +1,48 @@
 import gql from "graphql-tag";
 
 const matchTypeDefs = gql`
+  scalar Number
+
   extend type Query {
-    #
+    pastMatches(
+      team1: String!
+      team2: String!
+      gameplay: String!
+      limit: Int
+    ): PastMatches
+  }
+
+  extend type Mutation {
+    createMatches(
+      groups: [[String!]!]!
+      gameplay: String!
+      roundCode: String!
+    ): String
+    playMatches(
+      matchId: ID!
+      gameplay: String!
+      homeTeamGoals: Int
+      awayTeamGoals: Int
+      homeTeamExtraTimeGoals: Int
+      awayTeamExtraTimeGoals: Int
+      penaltiesWinner: String
+    ): String
+  }
+
+  type PastMatches {
+    overview: PastMatchesOverview!
+    matches: [MatchStatic!]!
+  }
+
+  type PastMatchesOverview {
+    team1Wins: Int!
+    team2Wins: Int!
+    draws: Int!
+    team1Goals: Int!
+    team2Goals: Int!
   }
 
   type Match {
-    _id: ID!
     code: String
     homeTeam: Team!
     awayTeam: Team!
@@ -14,13 +50,14 @@ const matchTypeDefs = gql`
     stadium: String
     isNeutralVenue: Boolean
     round: String!
-    leg: Leg
+    leg: Int
     group: String
-    homeTeamGoals: Int!
-    awayTeamGoals: Int!
+    matchday: Int
+    homeTeamGoals: Int
+    awayTeamGoals: Int
     homeTeamExtraTimeGoals: Int
     awayTeamExtraTimeGoals: Int
-    goalMinutes: [Number!]!
+    goalMinutes: [Number!]
     homeTeamAggs: Int
     awayTeamAggs: Int
     homeTeamPenalties: Int
@@ -29,19 +66,13 @@ const matchTypeDefs = gql`
   }
 
   type MatchStatic {
-    _id: ID!
-    homeTeam: Team!
-    awayTeam: Team!
+    homeTeam: String!
+    awayTeam: String!
     date: Date!
     isNeutralVenue: Boolean
     round: String!
     homeTeamGoals: Int!
     awayTeamGoals: Int!
-  }
-
-  enum Leg {
-    _1ST
-    _2ND
   }
 `;
 

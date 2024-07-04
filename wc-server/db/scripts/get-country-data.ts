@@ -8,7 +8,7 @@ export const readFIFARankingsData: () => Promise<{
     position: number;
     points: number;
   }[];
-  currentPoints: { [key: string]: number };
+  initialPoints: { [key: string]: number };
   countryCodes: { [key: string]: string };
   federations: { [key: string]: string };
 }> = () => {
@@ -19,7 +19,7 @@ export const readFIFARankingsData: () => Promise<{
       position: number;
       points: number;
     }[] = [];
-    const currentPoints:  { [key: string]: number } = {};
+    const initialPoints:  { [key: string]: number } = {};
     const countryCodes: { [key: string]: string } = {};
     const federations: { [key: string]: string } = {};
 
@@ -46,13 +46,13 @@ export const readFIFARankingsData: () => Promise<{
         position: parseInt(rank),
         points: parseFloat(points),
       });
-      currentPoints[code] = parseFloat(points);
+      initialPoints[code] = parseFloat(points);
       countryCodes[name] = code;
       federations[code] = rest[rest.length - 2];
     });
 
     rl.on("close", () => {
-      resolve({ fifaRankings, currentPoints, countryCodes, federations });
+      resolve({ fifaRankings, initialPoints, countryCodes, federations });
     });
 
     rl.on("error", (error) => {

@@ -38,7 +38,7 @@ const initCollection = async (
 
     await initCollection(TeamStatic, "TeamStatic", teams, teamStaticValidator);
     await initCollection(Ranking, "Ranking", rankings, rankingValidator);
-    // await initCollection(MatchStatic, matches, matchStaticValidator);
+    await initCollection(MatchStatic, "MatchStatic", matches, matchStaticValidator);
   } catch (err) {
     console.error(err);
   } finally {

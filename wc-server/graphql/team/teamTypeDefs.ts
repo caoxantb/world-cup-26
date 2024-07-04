@@ -4,7 +4,7 @@ const teamTypeDefs = gql`
   scalar Date
 
   extend type Query {
-    getAllTeams: [Team]
+    teamData(code: String!, gameplay: String!): Team
   }
 
   extend type Mutation {
@@ -12,29 +12,24 @@ const teamTypeDefs = gql`
   }
 
   type Team {
-    _id: ID!
     code: String!
-    currentFIFAPoints: Float!
-    isHost: Boolean!
-    xGoalData: XGoalData!
-    xGoalForParams: [Float!]!
-    xGoalAgainstParams: [Float!]!
-    federation: String!
-    gameplay: ID!
-  }
-
-  type TeamStatic {
-    _id: ID!
     name: String!
-    code: String!
     flag: String!
     logo: String!
     kits: Kits!
+    currentFIFARanking: Int!
     currentFIFAPoints: Float!
-    pastWorldCupStats: [PastWorldCupStats!]!
-    initialUEFARanking: Int!
-    xGoalData: XGoalData!
+    federation: String!
+    gameplay: ID!
+    pastWorldCupStats: [PastWorldCupStat!]!
     homeStadium: String!
+  }
+
+  type TeamCore {
+    code: String!
+    name: String!
+    flag: String!
+    logo: String!
     federation: String!
   }
 
@@ -43,7 +38,7 @@ const teamTypeDefs = gql`
     awayKit: String!
   }
 
-  type PastWorldCupStats {
+  type PastWorldCupStat {
     year: Int!
     place: String!
   }

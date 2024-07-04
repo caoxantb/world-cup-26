@@ -17,7 +17,9 @@ const rankingSchema = new mongoose.Schema<IRanking>({
   position: Number,
   points: Number,
   gameplay: mongoose.Schema.Types.ObjectId,
-})
+});
+
+rankingSchema.index({ team: 1, date: -1, position: 1 });
 
 const Ranking = mongoose.model<IRanking>("Ranking", rankingSchema);
 

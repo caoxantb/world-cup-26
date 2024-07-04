@@ -19,7 +19,7 @@ export const getTeamStaticData = async () => {
       encoding: "utf8",
     })
   );
-  const { fifaRankings, currentPoints, countryCodes, federations } =
+  const { fifaRankings, initialPoints, countryCodes, federations } =
     await readFIFARankingsData();
   const xGoalStats = await readXGoalData();
 
@@ -34,7 +34,7 @@ export const getTeamStaticData = async () => {
         homeKit: `${IMG_BASE}/kits/${code}_home`,
         awayKit: `${IMG_BASE}/kits/${code}_away`,
       },
-      currentFIFAPoints: currentPoints[code],
+      initialFIFAPoints: initialPoints[code],
       pastWorldCupStats: Object.prototype.hasOwnProperty.call(
         worldCupStats,
         code
