@@ -32,7 +32,7 @@
   "BHR": "Bahrain National Stadium, Riffa",
   "SGP": "Singapore National Stadium, Kallang",
   "CGO": "Stade Municipal de Kintélé, Brazzaville",
-  "MAS": "National Stadium, Kuala Lumpur",
+  "MAS": "Bukit Jalil National Stadium, Kuala Lumpur",
   "SDN": "Khartoum International Stadium, Khartoum",
   "CRO": "Maksimir Stadium, Zagreb",
   "BRB": "Barbados National Stadium, St. Michael",
@@ -75,7 +75,7 @@
   "THA": "Rajamangala National Stadium, Bangkok",
   "MRI": "Anjalay Stadium, Pamplemousses",
   "MLT": "National Stadium, Ta' Qali",
-  "EGY": "Egypt Stadium, New Administrative Capital",
+  "EGY": "Misr Stadium, New Administrative Capital",
   "CMR": "Stade Omnisport Paul Biya, Yaoundé",
   "SCO": "Hampden Park, Glasgow",
   "USA": "MetLife Stadium, East Rutherford",
@@ -128,7 +128,7 @@
   "NZL": "North Harbour Stadium, Albany",
   "KUW": "Jaber al-Ahmad International Stadium, Kuwait City",
   "TUN": "Hammadi Agrebi Olympic Stadium, Tunis",
-  "CHN": "National Stadium, Beijing",
+  "CHN": "Beijing National Stadium, Beijing",
   "GAB": "Stade de l’Amitié sino-gabonaise, Libreville",
   "TRI": "Hasely Crawford Stadium, Port of Spain",
   "GHA": "Accra Sports Stadium, Accra",
@@ -209,5 +209,5 @@
   "TLS": "National Stadium of East Timor, Dili",
   "SSD": "Juba Football Stadium, Juba",
   "KOS": "Fadil Vokrri Stadium, Pristina",
-  "GIB": "Estádio Algarve, Faro"
+  "GIB": "Victoria Stadium, Gilbratar"
 }

@@ -1,6 +1,9 @@
-import { dateScalar, numberScalar } from "./customScalar";
-import { gameplayMutations } from "./gameplay/gameplayResolvers";
-import { roundMutations } from "./round/roundResolvers";
+import { dateScalar, jsonObjectScalar, numberScalar } from "./customScalar";
+import {
+  gameplayMutations,
+  gameplayQueries,
+} from "./gameplay/gameplayResolvers";
+import { roundQueries, roundMutations } from "./round/roundResolvers";
 import { rankingQueries } from "./ranking/rankingResolvers";
 import {
   teamQueries,
@@ -9,16 +12,21 @@ import {
 } from "./team/teamResolvers";
 import { userMutations, userQueries } from "./user/userResolvers";
 import { matchQueries, matchesMutation } from "./match/matchResolvers";
+import { stadiumMutations, stadiumQueries } from "./stadium/stadiumResolvers";
 
 const resolvers = {
   Date: dateScalar,
   Number: numberScalar,
+  JsonObject: jsonObjectScalar,
   Team: teamTransforms,
   Query: {
+    ...gameplayQueries,
     ...matchQueries,
     ...rankingQueries,
+    ...roundQueries,
     ...teamQueries,
     ...userQueries,
+    ...stadiumQueries,
   },
   Mutation: {
     ...gameplayMutations,
@@ -26,6 +34,7 @@ const resolvers = {
     ...userMutations,
     ...teamMutations,
     ...roundMutations,
+    ...stadiumMutations,
   },
 };
 

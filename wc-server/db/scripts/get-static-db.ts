@@ -128,5 +128,3 @@ export const getMatchStaticData: () => Promise<
     });
   });
 };
-
-getTeamStaticData();

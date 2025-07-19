@@ -1,18 +1,44 @@
-import gql from "graphql-tag"
+import gql from "graphql-tag";
 
 const gameplayTypeDefs = gql`
   extend type Query {
-    getCurrentGameplay: Gameplay
+    accessGameplay(id: ID!): Gameplay
   }
 
   extend type Mutation {
-    createNewGameplay(name: String!): String
+    createNewGameplay(
+      name: String!
+      type: GameplayType!
+      hosts: [HostsInput!]!
+    ): String
   }
 
   type Gameplay {
     _id: ID!
-    currentDate: Date!
+    name: String!
+    ingameCurrentDate: Date!
+    type: GameplayType!
+    user: ID!
+    hosts: [Hosts!]!
   }
-`
 
-export default gameplayTypeDefs
+  type Hosts {
+    name: String!
+    order: Number!
+    federation: String!
+  }
+
+  input HostsInput {
+    name: String!
+    order: Number!
+    federation: String!
+  }
+
+  enum GameplayType {
+    north_america
+    centenario
+    custom
+  }
+`;
+
+export default gameplayTypeDefs;

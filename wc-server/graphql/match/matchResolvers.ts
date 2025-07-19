@@ -1,19 +1,59 @@
 import fs from "fs";
 
-import { Match, MatchStatic, Ranking, Team, TeamStatic } from "../../models";
+import {
+  Gameplay,
+  Match,
+  MatchStatic,
+  Ranking,
+  Team,
+  TeamStatic,
+} from "../../models";
 import { BadRequest } from "../../utils/httpError";
 import { z } from "zod";
 import { matchValidator } from "../../models/match";
-import mongoose from "mongoose";
 import {
   calcXGDistribution,
   computeScore,
   generateGoalMinutes,
   extraTime,
+  scheduleMatches,
 } from "../../utils/matchesUtils";
-import { populateTeamData, updateTeamData, updateFIFAPoints } from "../../utils/teamUtils";
+import {
+  populateTeamData,
+  updateTeamData,
+  updateFIFAPoints,
+  getHosts,
+} from "../../utils/teamsUtils";
+import { getStaticRounds } from "../../utils/roundsUtils";
+import { getDates } from "../../constants/dates";
 
 export const matchQueries = {
+  matchesByRound: async (
+    parents: undefined,
+    args: {
+      roundCode: string;
+      gameplay: string;
+      matchday?: number;
+      groups?: string[];
+    }
+  ) => {
+    const { roundCode, gameplay, matchday, groups } = args;
+
+    const matches = await Match.find({
+      round: roundCode,
+      gameplay,
+      $or: [
+        { leg: matchday },
+        { matchday },
+        {
+          $and: [{ leg: { $exists: false } }, { matchday: { $exists: false } }],
+        },
+      ],
+      ...(groups?.length && { group: { $in: groups } }),
+    }).lean();
+
+    return matches;
+  },
   pastMatches: async (
     parents: undefined,
     args: { team1: string; team2: string; gameplay: string; limit?: number }
@@ -135,130 +175,57 @@ export const matchQueries = {
 export const matchesMutation = {
   createMatches: async (
     parents: undefined,
-    args: { groups: string[][]; gameplay: string; roundCode: string }
+    args: { groups: string[][]; gameplayId: string; roundCode: string }
   ) => {
-    const { groups, roundCode, gameplay } = args;
+    const { groups, roundCode, gameplayId } = args;
 
-    const rounds = JSON.parse(
-      fs.readFileSync("./db/json/rounds.json", {
-        encoding: "utf8",
-      })
-    );
-    const round = rounds.find((r: any) => r.code === roundCode);
+    const gameplay = await Gameplay.findById(gameplayId);
 
-    const groupFlatten = groups.flat();
-    const stadiums = !round.stadiums
-      ? await TeamStatic.find({ code: { $in: groupFlatten } }).select(
-          "code homeStadium"
-        )
+    if (!gameplay) {
+      throw new BadRequest(
+        "No gameplay specified. Each team instance must be attached to a predefined gameplay."
+      );
+    }
+
+    const { hosts, type: gameplayType } = gameplay;
+
+    const rounds = await getStaticRounds(hosts, roundCode);
+    const fedsLength = hosts.filter(
+      (host) => host.federation === rounds[0].federation
+    ).length;
+
+    const dates = !roundCode.startsWith("FIFA")
+      ? getDates(roundCode, fedsLength)
       : [];
 
-    const matchdaysOrder: { [key: number]: number[] } = {
-      3: [2, 1, 4, 3],
-      4: [3, 2, 1, 5, 4, 6],
-      5: [5, 4, 3, 2, 1, 9, 8, 6, 7, 10],
-      6: [6, 5, 4, 3, 2, 1, 11, 10, 8, 7, 9, 12],
-    };
+    const hostsOrdered = hosts
+      .sort((h1, h2) => h1.order - h2.order)
+      .map((host) => host.name);
 
-    const schedules = groups.flatMap((teams, idx) => {
-      const initialTeamSize = teams.length;
-      if (teams.length % 2) teams.push("BYE");
-
-      const matchdaysCount = round.isTwoLegs
-        ? (teams.length - 1) * 2
-        : teams.length - 1;
-      const matchesPerMatchday = teams.length / 2;
-
-      return Array.from({ length: matchdaysCount }, (_, matchday) => {
-        const matches = Array.from(
-          { length: matchesPerMatchday },
-          (_, match) => {
-            let [homeTeam, awayTeam] = [
-              teams[match],
-              teams[teams.length - 1 - match],
-            ];
-
-            if (
-              matchday >= matchdaysCount / 2 &&
-              !(!(matchday % 2) && homeTeam === teams[0])
-            ) {
-              [homeTeam, awayTeam] = [awayTeam, homeTeam];
-            }
-
-            if (
-              matchday < matchdaysCount / 2 &&
-              matchday % 2 &&
-              homeTeam === teams[0]
-            ) {
-              [homeTeam, awayTeam] = [awayTeam, homeTeam];
-            }
-
-            if (homeTeam === "BYE" || awayTeam === "BYE") return null;
-
-            const dateOffset = round.matchdaySpan
-              ? Math.round(idx / (groups.length / round.matchdaySpan))
-              : 0;
-            const matchdaySwap =
-              matchdaysOrder[initialTeamSize]?.[matchday] ?? matchday + 1;
-            const date = new Date(
-              Array.isArray(round.dates[0])
-                ? round.dates[matchdaySwap - 1][match]
-                : round.dates[matchdaySwap - 1]
-            );
-            date.setDate(date.getDate() + dateOffset);
-
-            const leg =
-              teams.length === 2 && round.isTwoLegs ? matchday + 1 : undefined;
-            const matchdayDisplay =
-              initialTeamSize === 4 && round.code === "UEFA-GS"
-                ? matchdaySwap + 4
-                : teams.length > 2
-                ? matchdaySwap
-                : undefined;
-            const matchIdx =
-              teams.length === 2
-                ? idx + 1
-                : matchesPerMatchday * (matchdaySwap - 1) + match + 1;
-            const group =
-              round.numberOfGroups === 1
-                ? "GS"
-                : round.numberOfGroups > 1
-                ? String.fromCharCode("A".charCodeAt(0) + idx)
-                : undefined;
-            const matchCode =
-              round.type === "knockout"
-                ? `${round.code}-M${matchIdx}-${leg ? `L${leg}` : ""}`
-                : `${round.code}-${group}${matchIdx}-MD${matchdayDisplay}`;
-
-            return {
-              code: matchCode,
-              homeTeam,
-              awayTeam,
-              round: round.code,
-              date,
-              stadium: round.stadiums
-                ? round.stadiums[idx][matchIdx - 1]
-                : stadiums.find((s: { code: string }) => s.code === homeTeam)
-                    ?.homeStadium,
-              isNeutralVenue: !!round.stadiums,
-              ...(matchdayDisplay && { matchday: matchdayDisplay }),
-              ...(leg && { leg }),
-              ...(group && { group }),
-              gameplay: new mongoose.Types.ObjectId(gameplay),
-            };
-          }
-        ).filter(Boolean);
-
-        teams.splice(1, 0, teams.pop()!);
-        return matches;
-      }).flat();
-    });
+    const schedules = await scheduleMatches(
+      groups,
+      gameplayId,
+      rounds[0],
+      dates,
+      gameplayType,
+      hostsOrdered
+    );
 
     const matchesValidated = z.array(matchValidator).safeParse(schedules);
     if (!matchesValidated.success) {
       console.error(matchesValidated.error);
       throw new BadRequest("Match(es) invalidated");
     }
+
+    matchesValidated.data
+      .sort((m1, m2) => m1.date.getTime() - m2.date.getTime())
+      .forEach((m) =>
+        console.log(
+          `${m.code?.split("-").slice(-1)[0]} - ${m.homeTeam} vs. ${
+            m.awayTeam
+          } - ${m.stadium}`
+        )
+      );
 
     await Match.insertMany(matchesValidated.data);
   },
@@ -267,6 +234,13 @@ export const matchesMutation = {
 
     if (!match) {
       throw new BadRequest("Match not found");
+    }
+
+    if (
+      match.homeTeamGoals !== undefined ||
+      match.awayTeamGoals !== undefined
+    ) {
+      throw new BadRequest("Match already played");
     }
 
     const [homeTeamData, awayTeamData] = await Promise.all([
@@ -312,7 +286,7 @@ export const matchesMutation = {
         await legTwoMatch.save();
       }
     } else if (match.leg === 2) {
-      if (!match.homeTeamAggs || !match.awayTeamAggs)
+      if (match.homeTeamAggs === undefined || match.awayTeamAggs === undefined)
         throw new BadRequest("Invalid aggregates");
       let homeTeamAggs = match.homeTeamAggs + homeTeamGoals;
       let awayTeamAggs = match.awayTeamAggs + awayTeamGoals;
@@ -398,5 +372,7 @@ export const matchesMutation = {
     await match.save();
     await homeTeam.save();
     await awayTeam.save();
+
+    return match;
   },
 };

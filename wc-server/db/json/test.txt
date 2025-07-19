@@ -1,0 +1,72 @@
+M1 - URU vs. AUT - Estadio Centenario, Montevideo
+M2 - CAN vs. VIE - Estadio Mario Alberto Kempes, Cordoba
+M3 - ESP vs. USA - Camp Nou, Barcelona
+M4 - PAR vs. JPN - Estadio Osvaldo Domínguez Dibb, Asuncion
+M5 - TUN vs. PER - Nou Mestalla, Valencia
+M6 - CRC vs. NZL - Estadio Único Diego Armando Maradona, La Plata
+M7 - MAR vs. CHI - Hassan II Stadium, Casablanca
+M8 - ARG vs. ROU - Estadio Monumental, Buenos Aires
+M9 - KOR vs. RUS - Ibn Batouta Stadium, Tangier
+M10 - EGY vs. IRN - Estadio Osvaldo Domínguez Dibb, Asuncion
+M11 - POR vs. SCO - Estadio da Luz, Lisbon
+M12 - QAT vs. MEX - Estadio de Gran Canaria, Las Palmas
+M13 - FRA vs. ALG - Estadio de San Mamés, Bilbao
+M14 - JAM vs. TUR - Estadio Municipal de Riazor, A Coruna
+M15 - GER vs. PAN - Fes Stadium, Fes
+M16 - MLI vs. DEN - Marrakech Stadium, Marrakesh
+M17 - ITA vs. RSA - Estadio La Cartuja de Sevilla, Seville
+M18 - SWE vs. COL - Estadio Algarve, Faro
+M19 - NED vs. SEN - Estadio Santiago Bernabeu, Madrid
+M20 - KSA vs. HUN - Estadio de San Mamés, Bilbao
+M21 - ENG vs. SUI - Prince Moulay Abdellah Stadium, Rabat
+M22 - UZB vs. NGA - Fes Stadium, Fes
+M23 - BRA vs. AUS - Estadio do Dragao, Porto
+M24 - CMR vs. NOR - Estadio La Cartuja de Sevilla, Seville
+M25 - VIE vs. AUT - Estadio Osvaldo Domínguez Dibb, Asuncion
+M26 - PER vs. USA - Estadio de San Mamés, Bilbao
+M27 - CAN vs. URU - Estadio Mario Alberto Kempes, Cordoba
+M28 - TUN vs. ESP - Camp Nou, Barcelona
+M29 - NZL vs. JPN - Estadio Único Diego Armando Maradona, La Plata
+M30 - RUS vs. CHI - Fes Stadium, Fes
+M31 - CRC vs. PAR - Estadio Monumental, Buenos Aires
+M32 - KOR vs. MAR - Hassan II Stadium, Casablanca
+M33 - IRN vs. ROU - Estadio Mario Alberto Kempes, Cordoba
+M34 - MEX vs. SCO - Estadio La Cartuja de Sevilla, Seville
+M35 - EGY vs. ARG - Estadio Centenario, Montevideo
+M36 - QAT vs. POR - Estadio de Gran Canaria, Las Palmas
+M37 - TUR vs. ALG - Estadio Municipal de Riazor, A Coruna
+M38 - DEN vs. PAN - Marrakech Stadium, Marrakesh
+M39 - JAM vs. FRA - Estadio Santiago Bernabeu, Madrid
+M40 - MLI vs. GER - Prince Moulay Abdellah Stadium, Rabat
+M41 - COL vs. RSA - Estadio Algarve, Faro
+M42 - HUN vs. SEN - Nou Mestalla, Valencia
+M43 - SWE vs. ITA - Estadio do Dragao, Porto
+M44 - KSA vs. NED - Camp Nou, Barcelona
+M45 - NGA vs. SUI - Ibn Batouta Stadium, Tangier
+M46 - NOR vs. AUS - Estadio de Gran Canaria, Las Palmas
+M47 - UZB vs. ENG - Hassan II Stadium, Casablanca
+M48 - CMR vs. BRA - Estadio da Luz, Lisbon
+M49 - URU vs. VIE - Estadio Monumental, Buenos Aires
+M50 - AUT vs. CAN - Estadio Único Diego Armando Maradona, La Plata
+M51 - ESP vs. PER - Estadio Santiago Bernabeu, Madrid
+M52 - USA vs. TUN - Estadio Municipal de Riazor, A Coruna
+M53 - PAR vs. NZL - Estadio Centenario, Montevideo
+M54 - JPN vs. CRC - Estadio Mario Alberto Kempes, Cordoba
+M55 - MAR vs. RUS - Prince Moulay Abdellah Stadium, Rabat
+M56 - CHI vs. KOR - Marrakech Stadium, Marrakesh
+M57 - ARG vs. IRN - Estadio Osvaldo Domínguez Dibb, Asuncion
+M58 - ROU vs. EGY - Estadio Único Diego Armando Maradona, La Plata
+M59 - POR vs. MEX - Estadio do Dragao, Porto
+M60 - SCO vs. QAT - Estadio Algarve, Faro
+M61 - FRA vs. TUR - Camp Nou, Barcelona
+M62 - ALG vs. JAM - Nou Mestalla, Valencia
+M63 - GER vs. DEN - Hassan II Stadium, Casablanca
+M64 - PAN vs. MLI - Ibn Batouta Stadium, Tangier
+M65 - ITA vs. COL - Estadio da Luz, Lisbon
+M66 - RSA vs. SWE - Estadio de Gran Canaria, Las Palmas
+M67 - NED vs. HUN - Estadio de San Mamés, Bilbao
+M68 - SEN vs. KSA - Estadio Municipal de Riazor, A Coruna
+M69 - ENG vs. NGA - Fes Stadium, Fes
+M70 - SUI vs. UZB - Marrakech Stadium, Marrakesh
+M71 - BRA vs. NOR - Estadio La Cartuja de Sevilla, Seville
+M72 - AUS vs. CMR - Estadio Algarve, Faro

@@ -1,12 +1,11 @@
 import { Request, Response } from "express";
 import fs from "fs";
-import mongoose from "mongoose";
 import { z } from "zod";
 
 import { Ranking, Team, TeamStatic } from "../../models";
 import { teamValidator } from "../../models/team";
 import { BadRequest, NotFound } from "../../utils/httpError";
-import { linearFit } from "../../utils/teamUtils";
+import { getHosts, linearFit } from "../../utils/teamsUtils";
 
 export const teamTransforms = {
   currentFIFARanking: async (parents: { code: string; gameplay: string }) => {
@@ -17,6 +16,7 @@ export const teamTransforms = {
       $or: [{ gameplay }, { gameplay: { $exists: false } }],
     })
       .sort({ date: -1 })
+      .limit(1)
       .lean();
 
     return ranking?.position;
@@ -48,6 +48,22 @@ export const teamQueries = {
 
     throw new NotFound("Team not found.");
   },
+  allTeamsByFederation: async (
+    parents: undefined,
+    args: { federation?: string; isSortedByUEFARanking?: boolean }
+  ) => {
+    const { federation, isSortedByUEFARanking } = args;
+
+    const teamsStatic = await TeamStatic.find(
+      federation ? { federation } : {}
+    ).sort({
+      [federation === "UEFA" && isSortedByUEFARanking
+        ? "initialUEFARanking"
+        : "initialFIFAPoints"]: 1,
+    });
+
+    return teamsStatic.map((team) => team?.name);
+  },
 };
 
 export const teamMutations = {
@@ -56,29 +72,33 @@ export const teamMutations = {
     args: Record<string, never>,
     context: { req: Request; res: Response }
   ) => {
-    if (!context.req.gameplay) {
+    const {
+      req: { gameplay },
+    } = context;
+
+    if (!gameplay) {
       throw new BadRequest(
         "No gameplay specified. Each team instance must be attached to a predefined gameplay."
       );
     }
-    const teamsStatic = JSON.parse(
-      fs.readFileSync("./db/json/teams.json", {
-        encoding: "utf8",
-      })
-    );
+
+    const { hosts } = gameplay;
+
+    const hostArr = getHosts(hosts);
+    const teamsStatic = await TeamStatic.find();
+
     const teams = teamsStatic.map((team: any) => {
       const { code, xGoalData, federation, initialFIFAPoints } = team;
-      console.log(team);
       const [xGoalForParams, xGoalAgainstParams] = linearFit(xGoalData);
       return {
         code,
         currentFIFAPoints: initialFIFAPoints,
-        isHost: ["USA", "CAN", "MEX"].includes(code),
+        isHost: hostArr.includes(code),
         xGoalData,
         xGoalForParams,
         xGoalAgainstParams,
         federation,
-        gameplay: context.req.gameplay,
+        gameplay: gameplay._id,
       };
     });
     const teamsValidated = z.array(teamValidator).safeParse(teams);

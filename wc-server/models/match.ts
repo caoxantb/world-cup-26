@@ -54,7 +54,7 @@ export const matchSchema = new mongoose.Schema<IMatch>({
   homeTeamPenaltiesGoals: Number,
   awayTeamPenaltiesGoals: Number,
   teamTakenFirstPenalty: String,
-  gameplay: mongoose.Schema.Types.ObjectId,
+  gameplay: mongoose.Types.ObjectId,
 });
 
 const Match = mongoose.model<IMatch>("Match", matchSchema);

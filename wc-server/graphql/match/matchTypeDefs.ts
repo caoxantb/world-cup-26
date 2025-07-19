@@ -4,6 +4,12 @@ const matchTypeDefs = gql`
   scalar Number
 
   extend type Query {
+    matchesByRound(
+      gameplay: ID!
+      roundCode: String!
+      matchday: Int
+      groups: [String!]
+    ): [Match!]!
     pastMatches(
       team1: String!
       team2: String!
@@ -15,7 +21,7 @@ const matchTypeDefs = gql`
   extend type Mutation {
     createMatches(
       groups: [[String!]!]!
-      gameplay: String!
+      gameplayId: ID!
       roundCode: String!
     ): String
     playMatches(
@@ -26,7 +32,7 @@ const matchTypeDefs = gql`
       homeTeamExtraTimeGoals: Int
       awayTeamExtraTimeGoals: Int
       penaltiesWinner: String
-    ): String
+    ): Match
   }
 
   type PastMatches {
@@ -57,11 +63,15 @@ const matchTypeDefs = gql`
     awayTeamGoals: Int
     homeTeamExtraTimeGoals: Int
     awayTeamExtraTimeGoals: Int
-    goalMinutes: [Number!]
+    homeTeamGoalMinutes: [Number!]
+    awayTeamGoalMinutes: [Number!]
     homeTeamAggs: Int
     awayTeamAggs: Int
+    teamTakenFirstPenalty: String
     homeTeamPenalties: Int
     awayTeamPenalties: Int
+    homeTeamPenaltiesGoals: [Int!]
+    awayTeamPenaltiesGoals: [Int!]
     gameplay: ID!
   }
 

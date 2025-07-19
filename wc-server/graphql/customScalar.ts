@@ -1,7 +1,10 @@
 import { DateResolver } from "graphql-scalars";
+import { GraphQLJSONObject } from "graphql-type-json";
 import { GraphQLScalarType, Kind } from "graphql";
 
 export const dateScalar = DateResolver;
+
+export const jsonObjectScalar = GraphQLJSONObject;
 
 export const numberScalar = new GraphQLScalarType({
   name: "Number",

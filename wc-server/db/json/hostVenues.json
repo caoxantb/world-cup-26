@@ -1,0 +1,188 @@
+[
+  {
+    "name": "Estadio Santiago Bernabeu",
+    "city": "Madrid",
+    "hostCountry": "ESP",
+    "capacity": 85000,
+    "type": "centenario",
+    "group": 1,
+    "coordinations": [40.4530387, -3.6883337]
+  },
+  {
+    "name": "Estadio da Luz",
+    "city": "Lisbon",
+    "hostCountry": "POR",
+    "hostOpeningMatch": "POR",
+    "capacity": 70000,
+    "type": "centenario",
+    "group": 2,
+    "coordinations": [38.7526905, -9.184692]
+  },
+  {
+    "name": "Hassan II Stadium",
+    "city": "Casablanca",
+    "hostCountry": "MAR",
+    "hostOpeningMatch": "MAR",
+    "capacity": 115000,
+    "type": "centenario",
+    "group": 3,
+    "coordinations": [33.6756944, -7.2770188]
+  },
+  {
+    "name": "Camp Nou",
+    "city": "Barcelona",
+    "hostCountry": "ESP",
+    "hostOpeningMatch": "ESP",
+    "capacity": 105000,
+    "type": "centenario",
+    "group": 3,
+    "coordinations": [41.380896, 2.1228198]
+  },
+  {
+    "name": "Nou Mestalla",
+    "city": "Valencia",
+    "hostCountry": "ESP",
+    "capacity": 70044,
+    "type": "centenario",
+    "group": 4,
+    "coordinations": [39.4894647, -0.3965579]
+  },
+  {
+    "name": "Prince Moulay Abdellah Stadium",
+    "city": "Rabat",
+    "hostCountry": "MAR",
+    "capacity": 68700,
+    "type": "centenario",
+    "group": 4,
+    "coordinations": [33.9599189, -6.8890188]
+  },
+  {
+    "name": "Ibn Batouta Stadium",
+    "city": "Tangier",
+    "hostCountry": "MAR",
+    "capacity": 65000,
+    "type": "centenario",
+    "group": 5,
+    "coordinations": [35.7411572, -5.8580578]
+  },
+  {
+    "name": "Estadio do Dragao",
+    "city": "Porto",
+    "hostCountry": "POR",
+    "capacity": 50033,
+    "type": "centenario",
+    "group": 5,
+    "coordinations": [41.16177, -8.583591]
+  },
+  {
+    "name": "Estadio Monumental",
+    "city": "Buenos Aires",
+    "hostCountry": "ARG",
+    "hostOpeningMatch": "ARG",
+    "capacity": 85018,
+    "type": "centenario",
+    "group": 6,
+    "coordinations": [-34.5455302, -58.4496732]
+  },
+  {
+    "name": "Estadio Centenario",
+    "city": "Montevideo",
+    "hostCountry": "URU",
+    "hostOpeningMatch": "URU",
+    "capacity": 60235,
+    "type": "centenario",
+    "group": 6,
+    "coordinations": [-34.8947883, -56.1534664]
+  },
+  {
+    "name": "Estadio La Cartuja de Sevilla",
+    "city": "Seville",
+    "hostCountry": "ESP",
+    "capacity": 70000,
+    "type": "centenario",
+    "group": 7,
+    "coordinations": [37.4172008, -6.0041295]
+  },
+  {
+    "name": "Fes Stadium",
+    "city": "Fes",
+    "hostCountry": "MAR",
+    "capacity": 55800,
+    "type": "centenario",
+    "group": 7,
+    "coordinations": [34.0027881, -4.9689129]
+  },
+  {
+    "name": "Estadio de San Mamés",
+    "city": "Bilbao",
+    "hostCountry": "ESP",
+    "capacity": 53331,
+    "type": "centenario",
+    "group": 7,
+    "coordinations": [43.2641706, -2.9493731]
+  },
+  {
+    "name": "Estadio Municipal de Riazor",
+    "city": "A Coruna",
+    "hostCountry": "ESP",
+    "capacity": 48015,
+    "type": "centenario",
+    "group": 7,
+    "coordinations": [43.3683736, -8.4171049]
+  },
+  {
+    "name": "Marrakech Stadium",
+    "city": "Marrakesh",
+    "hostCountry": "MAR",
+    "capacity": 45860,
+    "type": "centenario",
+    "group": 7,
+    "coordinations": [31.7069988, -7.9803718]
+  },
+  {
+    "name": "Estadio de Gran Canaria",
+    "city": "Las Palmas",
+    "hostCountry": "ESP",
+    "capacity": 44500,
+    "type": "centenario",
+    "group": 7,
+    "coordinations": [28.1003684, -15.4567013]
+  },
+  {
+    "name": "Estadio Algarve",
+    "city": "Faro",
+    "hostCountry": "POR",
+    "capacity": 35000,
+    "type": "centenario",
+    "group": 7,
+    "coordinations": [37.088385, -7.9755825]
+  },
+  {
+    "name": "Estadio Mario Alberto Kempes",
+    "city": "Cordoba",
+    "hostCountry": "ARG",
+    "capacity": 57000,
+    "type": "centenario",
+    "group": 8,
+    "coordinations": [-31.3689296, -64.2461532]
+  },
+  {
+    "name": "Estadio Único Diego Armando Maradona",
+    "city": "La Plata",
+    "hostCountry": "ARG",
+    "capacity": 53000,
+    "type": "centenario",
+    "group": 8,
+    "coordinations": [-34.9137939, -57.9891083]
+  },
+  {
+    "name": "Estadio Osvaldo Domínguez Dibb",
+    "city": "Asuncion",
+    "hostCountry": "PAR",
+    "hostOpeningMatch": "PAR",
+    "capacity": 45000,
+    "type": "centenario",
+    "group": 8,
+    "coordinations": [-25.2916778, -57.6085796]
+  }
+]

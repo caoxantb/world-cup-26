@@ -1,4 +1,4 @@
-import { Ranking, Team } from "../models";
+import { Gameplay, Ranking, Team } from "../models";
 import { BadRequest } from "./httpError";
 
 export const populateTeamData = async (teamCode: string, gameplay: string) => {
@@ -56,8 +56,6 @@ export const updateFIFAPoints = (
 ) => {
   const teamPrevPoints = team.currentFIFAPoints;
 
-  console.log(teamPrevPoints, team.code);
-
   const opponentPrevPoints = opponent.currentFIFAPoints;
   const prevPointsDiff = teamPrevPoints - opponentPrevPoints;
 
@@ -79,8 +77,6 @@ export const updateFIFAPoints = (
     w < wE
       ? teamPrevPoints
       : teamPrevPoints + imp * (w - wE);
-
-  console.log(teamNewPoints, team.code);
 
   team.currentFIFAPoints = Math.round(teamNewPoints * 100) / 100;
 };
@@ -122,4 +118,10 @@ export const linearFit = (xGoalData: {
     [w1, b1],
     [w2, b2],
   ];
+};
+
+export const getHosts = (
+  hosts: { name: string; order: number; federation: string }[]
+) => {
+  return hosts.map((host) => host.name);
 };

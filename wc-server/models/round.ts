@@ -2,30 +2,25 @@ import mongoose from "mongoose";
 import { z } from "zod";
 
 export const roundValidator = z.object({
-  code: z.string().optional(),
-  name: z.string(),
-  type: z.enum(["knockout", "round-robin"]),
-  isTwoLegs: z.boolean(),
-  matches: z.array(z.instanceof(mongoose.Types.ObjectId)),
+  code: z.string(),
   teams: z.array(
     z.object({
       team: z.string(),
+      qualifiedAs: z.string().default("Entrance"),
       qualifiedDate: z.date().default(new Date("2023-07-31")),
       status: z
-        .enum(["advanced", "eliminated", "undetermined"])
+        .enum(["advanced", "eliminated", "undetermined", "finished"])
         .default("undetermined"),
       advancedTo: z.string().optional(),
     })
   ),
-  numberOfTeams: z.number().int().positive(),
-  numberOfGroups: z.number().int().positive().optional(),
   groupStage: z
     .array(
       z.object({
         groupName: z.string(),
         groupData: z.array(
           z.object({
-            team: z.string().default("TBD"),
+            team: z.string(),
             matchesPlayed: z.number().int().nonnegative().default(0),
             wins: z.number().int().nonnegative().default(0),
             draws: z.number().int().nonnegative().default(0),
@@ -46,25 +41,15 @@ type IRound = z.infer<typeof roundValidator>;
 
 const roundSchema = new mongoose.Schema<IRound>({
   code: String,
-  name: String,
-  type: String,
-  isTwoLegs: Boolean,
-  matches: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Match",
-    },
-  ],
   teams: [
     {
       team: String,
       qualifiedDate: Date,
+      qualifiedAs: String,
       status: String,
       advancedTo: String,
     },
   ],
-  numberOfTeams: Number,
-  numberOfGroups: Number,
   groupStage: [
     {
       groupName: String,

@@ -5,6 +5,10 @@ const teamTypeDefs = gql`
 
   extend type Query {
     teamData(code: String!, gameplay: String!): Team
+    allTeamsByFederation(
+      federation: String
+      isSortedByUEFARanking: Boolean
+    ): [String]
   }
 
   extend type Mutation {
