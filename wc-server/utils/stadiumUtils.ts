@@ -358,39 +358,100 @@ export const allocateStadiumGroups = (
   swapMatches(3, 7);
   swapMatches(25, 45);
 
-  return stadiums;
+  return { stadiums, firstGroupHostNumber };
 };
 
 export const getWorldCupStadiums = async (
-  gameplayId: string,
   code: string,
   gameplayType: "custom" | "north_america" | "centenario",
-  preferedHostOrder: string[]
+  hosts: string[],
+  gameplayId?: string
 ) => {
   const stadiums = await Stadium.find(
     gameplayType === "custom" ? { gameplayId } : { type: gameplayType }
   );
 
-  if (code === "FIFA-INTERPO-SF") {
-    const stadiumSemiFinal = stadiums
-      .filter((stadium) => [3, 4].includes(stadium.group))
-      .sort((s1, s2) => s1.group - s2.group);
+  const stadiumsGroup = mixClusterStadium(stadiums, hosts);
+  const { stadiums: stadiumsByMatch, firstGroupHostNumber } =
+    allocateStadiumGroups(stadiumsGroup, hosts);
 
-    return stadiumSemiFinal;
+  switch (code) {
+    case "FIFA-INTERPO-SF":
+      return stadiums
+        .filter((stadium) => [3, 4].includes(stadium.group))
+        .sort((s1, s2) => s1.group - s2.group);
+    case "FIFA-INTERPO-F":
+      return stadiums.filter((stadium) => [1, 2].includes(stadium.group));
+    case "FIFA-WC-GS":
+      return stadiumsByMatch;
+    case "FIFA-WC-R32":
+      let r32StadiumsFinal = Array(16).fill("");
+      const r32Stadiums = stadiums.filter(
+        (stadium) => ![2, 8].includes(stadium.group)
+      );
+      const hostStadiumIdx =
+        hosts.length === 1
+          ? [0]
+          : hosts.length === 2
+          ? [0, 1]
+          : hosts.length === 3 && firstGroupHostNumber === 1
+          ? [0, 1, 3]
+          : hosts.length === 3
+          ? [0, 3, 6]
+          : [0, 1, 3, 4, 6, 7];
+
+      const usedStadiums = new Set();
+
+      hosts.forEach((host, idx) => {
+        const stadium =
+          r32Stadiums.find((s) => s.hostOpeningMatch === host) ||
+          r32Stadiums
+            .filter((s) => s.hostCountry === host)
+            .sort((s1, s2) => s2.capacity - s1.capacity)[0];
+
+        if (stadium) {
+          r32StadiumsFinal[hostStadiumIdx[idx]] = stadium;
+          usedStadiums.add(stadium);
+        }
+      });
+
+      const remainingStadiums = r32Stadiums.filter((s) => !usedStadiums.has(s));
+      for (let i = remainingStadiums.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [remainingStadiums[i], remainingStadiums[j]] = [
+          remainingStadiums[j],
+          remainingStadiums[i],
+        ];
+      }
+
+      let r = 0;
+      for (let i = 0; i < r32StadiumsFinal.length; i++) {
+        if (r32StadiumsFinal[i] === "" && r < remainingStadiums.length) {
+          r32StadiumsFinal[i] = remainingStadiums[r++];
+        }
+      }
+
+      return r32StadiumsFinal;
+
+    case "FIFA-WC-R16":
+      return _.shuffle(
+        stadiums.filter((stadium) => [1, 2, 3, 4, 5].includes(stadium.group))
+      );
+
+    case "FIFA-WC-QF":
+      return _.shuffle(
+        stadiums.filter((stadium) => [1, 2, 4].includes(stadium.group))
+      );
+
+    case "FIFA-WC-SF":
+      return _.shuffle(
+        stadiums.filter((stadium) => [3].includes(stadium.group))
+      );
+
+    case "FIFA-WC-3P":
+      return stadiums.filter((stadium) => [2].includes(stadium.group));
+
+    case "FIFA-WC-F":
+      return stadiums.filter((stadium) => [1].includes(stadium.group));
   }
-  if (code === "FIFA-INTERPO-F") {
-    const stadiumFinal = stadiums.filter((stadium) =>
-      [1, 2].includes(stadium.group)
-    );
-
-    return stadiumFinal;
-  }
-
-  const stadiumsGroup = mixClusterStadium(stadiums, preferedHostOrder);
-  const stadiumsByMatch = allocateStadiumGroups(
-    stadiumsGroup,
-    preferedHostOrder
-  );
-
-  return stadiumsByMatch;
 };

@@ -217,16 +217,6 @@ export const matchesMutation = {
       throw new BadRequest("Match(es) invalidated");
     }
 
-    matchesValidated.data
-      .sort((m1, m2) => m1.date.getTime() - m2.date.getTime())
-      .forEach((m) =>
-        console.log(
-          `${m.code?.split("-").slice(-1)[0]} - ${m.homeTeam} vs. ${
-            m.awayTeam
-          } - ${m.stadium}`
-        )
-      );
-
     await Match.insertMany(matchesValidated.data);
   },
   playMatches: async (parents: undefined, args: any) => {

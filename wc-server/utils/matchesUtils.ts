@@ -233,7 +233,7 @@ export const scheduleMatches = async (
   const { code, legs, numberOfGroups, numberOfTeams, type } = round;
 
   const worldCupStadiums = code.startsWith("FIFA")
-    ? await getWorldCupStadiums(gameplayId, code, gameplayType, hostsOrdered)
+    ? await getWorldCupStadiums(code, gameplayType, hostsOrdered, gameplayId)
     : undefined;
 
   const finalVenueCoord = worldCupStadiums
@@ -329,8 +329,10 @@ export const scheduleMatches = async (
         tempMatchIdx += 1;
         nonResetMatchIdx += 1;
 
-        const worldCupGSMatchIndex =
-          swapWorldCupGroupStageMatchNo(nonResetMatchIdx);
+        const worldCupGSMatchIndex = swapWorldCupMatchNo(
+          nonResetMatchIdx,
+          code
+        );
 
         const worldCupStadium = worldCupStadiums
           ? worldCupStadiums[worldCupGSMatchIndex - 1]
@@ -351,12 +353,11 @@ export const scheduleMatches = async (
           date = new Date(wcDateWithTimezone);
         }
 
-        const matchCode =
-          code === "FIFA-WC-GS"
-            ? `${code}-M${worldCupGSMatchIndex}`
-            : type === "knockout"
-            ? `${code}-M${matchIdx}${leg ? `-L${leg}` : ""}`
-            : `${code}-${group}-MD${matchdayDisplay}-M${matchIdx}`;
+        const matchCode = code.startsWith("FIFA-WC")
+          ? `${code}-M${worldCupGSMatchIndex}`
+          : type === "knockout"
+          ? `${code}-M${matchIdx}${leg ? `-L${leg}` : ""}`
+          : `${code}-${group}-MD${matchdayDisplay}-M${matchIdx}`;
 
         return {
           code: matchCode,
@@ -380,13 +381,29 @@ export const scheduleMatches = async (
   return schedules;
 };
 
-const swapWorldCupGroupStageMatchNo = (matchNo: number) => {
-  const swapIdxs = [
-    49, 50, 27, 25, 1, 2, 51, 52, 28, 26, 3, 5, 53, 54, 31, 29, 4, 6, 55, 56,
-    32, 30, 7, 9, 57, 58, 35, 33, 8, 10, 59, 60, 36, 34, 11, 12, 61, 62, 39, 37,
-    13, 14, 63, 64, 40, 38, 15, 16, 65, 66, 43, 41, 17, 18, 67, 68, 44, 42, 19,
-    20, 69, 70, 47, 45, 21, 22, 71, 72, 48, 46, 23, 24,
-  ];
-
-  return swapIdxs[matchNo - 1];
+const swapWorldCupMatchNo = (matchNo: number, code: string) => {
+  switch (code) {
+    case "FIFA-WC-GS":
+      const swapGsIdxs = [
+        49, 50, 27, 25, 1, 2, 51, 52, 28, 26, 3, 5, 53, 54, 31, 29, 4, 6, 55,
+        56, 32, 30, 7, 9, 57, 58, 35, 33, 8, 10, 59, 60, 36, 34, 11, 12, 61, 62,
+        39, 37, 13, 14, 63, 64, 40, 38, 15, 16, 65, 66, 43, 41, 17, 18, 67, 68,
+        44, 42, 19, 20, 69, 70, 47, 45, 21, 22, 71, 72, 48, 46, 23, 24,
+      ];
+      return swapGsIdxs[matchNo - 1];
+    case "FIFA-WC-R32":
+      return matchNo + 72;
+    case "FIFA-WC-R16":
+      return matchNo + 88;
+    case "FIFA-WC-QF":
+      return matchNo + 96;
+    case "FIFA-WC-SF":
+      return matchNo + 100;
+    case "FIFA-WC-3P":
+      return 103;
+    case "FIFA-WC-GS":
+      return 104;
+    default:
+      return matchNo;
+  }
 };

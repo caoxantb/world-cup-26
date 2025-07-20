@@ -3,6 +3,7 @@ import { IStadium, stadiumValidator } from "../../models/stadium";
 import { Stadium } from "../../models";
 import {
   allocateStadiumGroups,
+  getWorldCupStadiums,
   mixClusterStadium,
 } from "../../utils/stadiumUtils";
 
@@ -11,7 +12,7 @@ export const stadiumQueries = {
     parents: undefined,
     args: {
       type: "north_america" | "centenario" | "custom";
-      gameplayId?: String;
+      gameplayId?: string;
     }
   ) => {
     const { type, gameplayId } = args;
@@ -19,26 +20,6 @@ export const stadiumQueries = {
     const stadiums = await Stadium.find(
       type === "custom" ? { gameplayId } : { type }
     );
-
-    const clusteredStadiums = mixClusterStadium(stadiums, [
-      "URU",
-      "ESP",
-      "PAR",
-      "MAR",
-      "ARG",
-      "POR",
-    ]);
-
-    const allocatedStadiums = allocateStadiumGroups(clusteredStadiums, [
-      "URU",
-      "ESP",
-      "PAR",
-      "MAR",
-      "ARG",
-      "POR",
-    ]);
-
-    console.log(allocatedStadiums.map((s) => s?.name).slice(24, 48));
 
     return stadiums;
   },
