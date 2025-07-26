@@ -1,5 +1,188 @@
 [
   {
+    "name": "MetLife Stadium",
+    "city": "East Rutherford",
+    "hostCountry": "USA",
+    "capacity": 87157,
+    "type": "north_america",
+    "group": 1,
+    "coordinations": [40.8135064, -74.074457]
+  },
+  {
+    "name": "Olympic Stadium",
+    "city": "Montreal",
+    "hostCountry": "CAN",
+    "capacity": 61004,
+    "type": "north_america",
+    "group": 2,
+    "coordinations": [45.5577438, -73.5515478]
+  },
+  {
+    "name": "AT&T Stadium",
+    "city": "Arlington",
+    "hostCountry": "USA",
+    "capacity": 92967,
+    "type": "north_america",
+    "group": 3,
+    "coordinations": [32.7479966, -97.0934165]
+  },
+  {
+    "name": "Estadio Azteca",
+    "city": "Mexico City",
+    "hostCountry": "MEX",
+    "hostOpeningMatch": "MEX",
+    "capacity": 87523,
+    "type": "north_america",
+    "group": 3,
+    "coordinations": [19.3028607, -99.1505277]
+  },
+  {
+    "name": "Mercedes-Benz Stadium",
+    "city": "Atlanta",
+    "hostCountry": "USA",
+    "capacity": 75000,
+    "type": "north_america",
+    "group": 4,
+    "coordinations": [33.7553232, -84.4005905]
+  },
+  {
+    "name": "SoFi Stadium",
+    "city": "Inglewood",
+    "hostCountry": "USA",
+    "hostOpeningMatch": "USA",
+    "capacity": 70240,
+    "type": "north_america",
+    "group": 4,
+    "coordinations": [33.9466909, -118.3388337]
+  },
+  {
+    "name": "GEHA Field at Arrowhead Stadium",
+    "city": "Kansas City",
+    "hostCountry": "USA",
+    "capacity": 76640,
+    "type": "north_america",
+    "group": 5,
+    "coordinations": [39.0489647, -94.4840141]
+  },
+  {
+    "name": "Allegiant Stadium",
+    "city": "Las Vegas",
+    "hostCountry": "USA",
+    "capacity": 72000,
+    "type": "north_america",
+    "group": 5,
+    "coordinations": [36.0908665, -115.1833222]
+  },
+  {
+    "name": "Estadio BBVA",
+    "city": "Guadalupe",
+    "hostCountry": "MEX",
+    "capacity": 53460,
+    "type": "north_america",
+    "group": 6,
+    "coordinations": [25.6691181, -100.2445002]
+  },
+  {
+    "name": "BMO Field",
+    "city": "Toronto",
+    "hostCountry": "CAN",
+    "hostOpeningMatch": "CAN",
+    "capacity": 45736,
+    "type": "north_america",
+    "group": 6,
+    "coordinations": [43.6331702, -79.4186162]
+  },
+  {
+    "name": "U.S. Bank Stadium",
+    "city": "Minneapolis",
+    "hostCountry": "USA",
+    "capacity": 66655,
+    "type": "north_america",
+    "group": 7,
+    "coordinations": [44.9736461, -93.2574945]
+  },
+  {
+    "name": "NRG Stadium",
+    "city": "Houston",
+    "hostCountry": "USA",
+    "capacity": 72220,
+    "type": "north_america",
+    "group": 7,
+    "coordinations": [29.6847219, -95.4107074]
+  },
+  {
+    "name": "Levi's Stadium",
+    "city": "Santa Clara",
+    "hostCountry": "USA",
+    "capacity": 70909,
+    "type": "north_america",
+    "group": 7,
+    "coordinations": [37.4033165, -121.9693774]
+  },
+  {
+    "name": "Gillette Stadium",
+    "city": "Foxborough",
+    "hostCountry": "USA",
+    "capacity": 70000,
+    "type": "north_america",
+    "group": 7,
+    "coordinations": [42.0908391, -71.2642713]
+  },
+  {
+    "name": "Lincoln Financial Field",
+    "city": "Philadelphia",
+    "hostCountry": "USA",
+    "capacity": 69328,
+    "type": "north_america",
+    "group": 7,
+    "coordinations": [39.9014189, -75.1675992]
+  },
+  {
+    "name": "Lumen Field",
+    "city": "Seattle",
+    "hostCountry": "USA",
+    "capacity": 69000,
+    "type": "north_america",
+    "group": 7,
+    "coordinations": [47.5951518, -122.3316394]
+  },
+  {
+    "name": "Hard Rock Stadium",
+    "city": "Miami Gardens",
+    "hostCountry": "USA",
+    "capacity": 67518,
+    "type": "north_america",
+    "group": 7,
+    "coordinations": [25.958326, -80.2395979]
+  },
+  {
+    "name": "BC Place",
+    "city": "Vancouver",
+    "hostCountry": "CAN",
+    "capacity": 54500,
+    "type": "north_america",
+    "group": 8,
+    "coordinations": [49.27675, -123.111999]
+  },
+  {
+    "name": "Commonwealth Stadium",
+    "city": "Edmonton",
+    "hostCountry": "CAN",
+    "capacity": 56302,
+    "type": "north_america",
+    "group": 8,
+    "coordinations": [53.5597151, -113.4761643]
+  },
+  {
+    "name": "Estadio Akron",
+    "city": "Zapopan",
+    "hostCountry": "MEX",
+    "capacity": 48071,
+    "type": "north_america",
+    "group": 8,
+    "coordinations": [20.6817764, -103.4626455]
+  },
+  {
     "name": "Estadio Santiago Bernabeu",
     "city": "Madrid",
     "hostCountry": "ESP",

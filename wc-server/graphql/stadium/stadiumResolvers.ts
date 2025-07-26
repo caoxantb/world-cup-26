@@ -1,11 +1,6 @@
 import { z } from "zod";
 import { IStadium, stadiumValidator } from "../../models/stadium";
 import { Stadium } from "../../models";
-import {
-  allocateStadiumGroups,
-  getWorldCupStadiums,
-  mixClusterStadium,
-} from "../../utils/stadiumUtils";
 
 export const stadiumQueries = {
   getAllCurrentGameplayStadiums: async (

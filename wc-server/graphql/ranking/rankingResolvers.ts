@@ -1,4 +1,3 @@
-import { Request, Response } from "express";
 import { Ranking, Team, TeamStatic } from "../../models";
 
 export const rankingQueries = {

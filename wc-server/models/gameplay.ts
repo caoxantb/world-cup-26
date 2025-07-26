@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { number, z } from "zod";
+import { z } from "zod";
 
 const gameplayValidator = z.object({
   name: z.string(),

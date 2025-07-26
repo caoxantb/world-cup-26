@@ -1,13 +1,4 @@
-import fs from "fs";
-
-import {
-  Gameplay,
-  Match,
-  MatchStatic,
-  Ranking,
-  Team,
-  TeamStatic,
-} from "../../models";
+import { Gameplay, Match, MatchStatic } from "../../models";
 import { BadRequest } from "../../utils/httpError";
 import { z } from "zod";
 import { matchValidator } from "../../models/match";
