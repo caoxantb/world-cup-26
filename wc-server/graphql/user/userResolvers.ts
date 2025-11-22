@@ -1,7 +1,7 @@
-import { hash, compare } from "bcryptjs";
+import bcrypt from "bcryptjs";
 import { config } from "dotenv";
 import { Request, Response } from "express";
-import { sign } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 import { User } from "../../models";
 import { BadRequest, Unauthorized } from "../../utils/httpError";
@@ -40,7 +40,7 @@ export const userMutations = {
     if (!password || password.length <= 8) {
       throw new BadRequest("Password must be at least 8 characters");
     }
-    const passwordHash = await hash(password, saltRounds);
+    const passwordHash = await bcrypt.hash(password, saltRounds);
 
     const newUser = new User({
       email,
@@ -50,13 +50,13 @@ export const userMutations = {
 
     await newUser.save();
 
-    const accessToken = sign(
+    const accessToken = jwt.sign(
       { email },
       process.env.JWT_ACCESS_TOKEN_SECRET || "JWT_ACCESS_TOKEN_SECRET",
       { expiresIn: "1h" }
     );
 
-    const refreshToken = sign(
+    const refreshToken = jwt.sign(
       { email },
       process.env.JWT_REFRESH_TOKEN_SECRET || "JWT_REFRESH_TOKEN_SECRET"
     );
@@ -81,18 +81,18 @@ export const userMutations = {
     const validCredentials =
       !user || !user.passwordHash
         ? false
-        : await compare(password, user.passwordHash);
+        : await bcrypt.compare(password, user.passwordHash);
     if (!(user && validCredentials)) {
       throw new BadRequest("Invalid credentials");
     }
 
-    const accessToken = sign(
+    const accessToken = jwt.sign(
       { email },
       process.env.JWT_ACCESS_TOKEN_SECRET || "JWT_ACCESS_TOKEN_SECRET",
       { expiresIn: "1h" }
     );
 
-    const refreshToken = sign(
+    const refreshToken = jwt.sign(
       { email },
       process.env.JWT_REFRESH_TOKEN_SECRET || "JWT_REFRESH_TOKEN_SECRET"
     );
