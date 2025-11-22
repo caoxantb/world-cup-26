@@ -1,7 +1,9 @@
-import { Gameplay, Match, MatchStatic } from "../../models";
-import { BadRequest } from "../../utils/httpError";
 import { z } from "zod";
+
+import { getDates } from "../../constants/dates";
+import { Gameplay, Match, MatchStatic } from "../../models";
 import { matchValidator } from "../../models/match";
+import { BadRequest } from "../../utils/httpError";
 import {
   calcXGDistribution,
   computeScore,
@@ -9,14 +11,13 @@ import {
   extraTime,
   scheduleMatches,
 } from "../../utils/matchesUtils";
+import { getStaticRounds } from "../../utils/roundsUtils";
 import {
   populateTeamData,
   updateTeamData,
   updateFIFAPoints,
   getHosts,
 } from "../../utils/teamsUtils";
-import { getStaticRounds } from "../../utils/roundsUtils";
-import { getDates } from "../../constants/dates";
 
 export const matchQueries = {
   matchesByRound: async (
@@ -239,8 +240,8 @@ export const matchesMutation = {
       calcXGDistribution(awayTeam, homeTeam, -rankDiff),
     ];
 
-    let homeTeamGoals = computeScore(homeTeamDist, args.homeTeamGoals);
-    let awayTeamGoals = computeScore(homeTeamDist, args.awayTeamGoals);
+    const homeTeamGoals = computeScore(homeTeamDist, args.homeTeamGoals);
+    const awayTeamGoals = computeScore(homeTeamDist, args.awayTeamGoals);
     const [homeTeamGoalMinutes, awayTeamGoalMinutes] = generateGoalMinutes(
       homeTeamGoals,
       awayTeamGoals
@@ -269,8 +270,8 @@ export const matchesMutation = {
     } else if (match.leg === 2) {
       if (match.homeTeamAggs === undefined || match.awayTeamAggs === undefined)
         throw new BadRequest("Invalid aggregates");
-      let homeTeamAggs = match.homeTeamAggs + homeTeamGoals;
-      let awayTeamAggs = match.awayTeamAggs + awayTeamGoals;
+      const homeTeamAggs = match.homeTeamAggs + homeTeamGoals;
+      const awayTeamAggs = match.awayTeamAggs + awayTeamGoals;
 
       if (
         homeTeamAggs === awayTeamAggs &&

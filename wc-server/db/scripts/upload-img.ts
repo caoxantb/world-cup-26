@@ -1,12 +1,12 @@
 import axios from "axios";
 import { v2 as cloudinary } from "cloudinary";
-import dotenv from "dotenv";
+import { config } from "dotenv";
 import { JSDOM } from "jsdom";
 import pLimit from "p-limit";
 
 import { readFIFARankingsData } from "./get-country-data";
 
-dotenv.config();
+config();
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,

@@ -1,7 +1,8 @@
 import _, { Dictionary } from "lodash";
+
 import { BadRequest } from "./httpError";
-import { Match, Ranking, RoundStatic } from "../models";
 import { getHosts } from "./teamsUtils";
+import { Match, Ranking, RoundStatic } from "../models";
 
 type GroupStageObject = {
   groupName: string;
@@ -26,7 +27,7 @@ export const parseAdvancedStatus = (
   }
 
   const advancedStatus = Object.keys(teams).reduce(
-    (acc: { [key: string]: {} }, cur) => {
+    (acc: { [key: string]: unknown }, cur) => {
       const { min, max } = teams[cur];
 
       // slots doesn't contain min value -> min value > all slots -> eliminated
@@ -99,8 +100,8 @@ export const parseAdvancedStatusEdgedPosition = async (
   matchDate: Date,
   totalMatchdays: number
 ) => {
-  let edgeTeams: { [key: string]: any } = {};
-  let advancedStatus: { [key: string]: any } = {};
+  const edgeTeams: { [key: string]: any } = {};
+  const advancedStatus: { [key: string]: any } = {};
 
   // check how many teams have played the last match and fixated their group stage position
   groupStage.forEach((group) => {
@@ -207,7 +208,7 @@ export const checkTeamMinMaxPositionTwoRoundsRemain = (
     let resIdx = i;
     const clonePointsTable = { ...pointsTable };
 
-    for (let match of matches) {
+    for (const match of matches) {
       const result = results[resIdx % 3];
       switch (result) {
         case "HOME":
@@ -232,7 +233,7 @@ export const checkTeamMinMaxPositionTwoRoundsRemain = (
         return acc;
       }, {});
 
-    for (let team in teamMinMaxTable) {
+    for (const team in teamMinMaxTable) {
       const teamPoints = clonePointsTable[team].points;
 
       teamMinMaxTable[team].min = Math.min(

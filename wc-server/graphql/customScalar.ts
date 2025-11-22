@@ -1,6 +1,6 @@
+import { GraphQLScalarType, Kind } from "graphql";
 import { DateResolver } from "graphql-scalars";
 import { GraphQLJSONObject } from "graphql-type-json";
-import { GraphQLScalarType, Kind } from "graphql";
 
 export const dateScalar = DateResolver;
 

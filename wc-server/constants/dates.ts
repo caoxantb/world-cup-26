@@ -1,5 +1,5 @@
-import tzlookup from "tz-lookup";
 import { DateTime } from "luxon";
+import tzlookup from "tz-lookup";
 
 import { range } from "../utils";
 
@@ -10,7 +10,7 @@ const getMatchdateWindows = (windows: number[], federation: string) => {
     "2023-11-13",
     "2023-11-17",
     "2024-03-18",
-    "2024-08-22",
+    "2024-03-22",
     "2024-06-03",
     "2024-06-07",
     "2024-09-02",
@@ -27,8 +27,8 @@ const getMatchdateWindows = (windows: number[], federation: string) => {
     "2025-09-05",
     "2025-10-06",
     "2025-10-10",
-    "2025-10-10",
-    "2025-10-14",
+    "2025-11-10",
+    "2025-11-14",
   ];
 
   const FEDERATIONS_OFFSET: { [key: string]: number } = {

@@ -1,8 +1,9 @@
-import seedrandom from "seedrandom";
-import { IStadium } from "../models/stadium";
-import munkres from "munkres";
 import _ from "lodash";
+import munkres from "munkres";
+import seedrandom from "seedrandom";
+
 import { Stadium } from "../models";
+import { IStadium } from "../models/stadium";
 
 const rng = seedrandom("42");
 
@@ -70,7 +71,7 @@ const kmeans = (points: [number, number][], k = 4, maxIter = 100) => {
 
   const centroids = initCentroids(points, k);
 
-  let assignments: number[] = new Array(n).fill(-1);
+  const assignments: number[] = new Array(n).fill(-1);
   let changed = true;
   let iter = 0;
 
@@ -384,8 +385,8 @@ export const getWorldCupStadiums = async (
       return stadiums.filter((stadium) => [1, 2].includes(stadium.group));
     case "FIFA-WC-GS":
       return stadiumsByMatch;
-    case "FIFA-WC-R32":
-      let r32StadiumsFinal = Array(16).fill("");
+    case "FIFA-WC-R32": {
+      const r32StadiumsFinal = Array(16).fill("");
       const r32Stadiums = stadiums.filter(
         (stadium) => ![2, 8].includes(stadium.group)
       );
@@ -432,6 +433,7 @@ export const getWorldCupStadiums = async (
       }
 
       return r32StadiumsFinal;
+    }
 
     case "FIFA-WC-R16":
       return _.shuffle(
