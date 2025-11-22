@@ -1,0 +1,7 @@
+export default function GameplayLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return <div className="px-[5%] py-12">{children}</div>;
+}
