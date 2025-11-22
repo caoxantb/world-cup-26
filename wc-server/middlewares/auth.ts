@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
+import { verify, sign } from "jsonwebtoken";
 
 import { User } from "../models";
 import { Forbidden } from "../utils/httpError";
@@ -16,7 +16,7 @@ export const authenticateUser = async (
 
   const cookieOptions = { ...res.app.get("cookieOptions"), signed: true };
   try {
-    const decodedAccessToken = jwt.verify(
+    const decodedAccessToken = verify(
       accessToken,
       process.env.JWT_ACCESS_TOKEN_SECRET || "JWT_ACCESS_TOKEN_SECRET"
     );
@@ -30,7 +30,7 @@ export const authenticateUser = async (
       throw new Forbidden("Unknown user");
     }
     req.user = user;
-    next()
+    next();
   } catch (err) {
     const user = await refreshAccessToken(req, res);
     if (!user) {
@@ -38,7 +38,7 @@ export const authenticateUser = async (
       throw new Forbidden("Unknown user");
     }
     req.user = user;
-    next()
+    next();
   }
 };
 
@@ -51,7 +51,7 @@ const refreshAccessToken = async (req: Request, res: Response) => {
 
   const cookieOptions = { ...res.app.get("cookieOptions"), signed: true };
   try {
-    const decodedRefreshToken = jwt.verify(
+    const decodedRefreshToken = verify(
       refreshToken,
       process.env.JWT_REFRESH_TOKEN_SECRET || "JWT_REFRESH_TOKEN_SECRET"
     );
@@ -65,7 +65,7 @@ const refreshAccessToken = async (req: Request, res: Response) => {
       throw new Forbidden("Unknown user");
     }
 
-    const newAccessToken = jwt.sign(
+    const newAccessToken = sign(
       { email: user.email },
       process.env.JWT_ACCESS_TOKEN_SECRET || "JWT_ACCESS_TOKEN_SECRET",
       { expiresIn: "1h" }

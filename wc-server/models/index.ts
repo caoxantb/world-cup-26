@@ -3,12 +3,12 @@ import Gameplay from "./gameplay";
 import Match from "./match";
 import MatchStatic from "./matchStatic";
 import Ranking from "./ranking";
-import RoundStatic from "./roundStatic";
 import Round from "./round";
+import RoundStatic from "./roundStatic";
+import Stadium from "./stadium";
 import Team from "./team";
 import TeamStatic from "./teamStatic";
 import User from "./user";
-import Stadium from "./stadium";
 
 export {
   Team,

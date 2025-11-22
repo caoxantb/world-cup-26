@@ -10,7 +10,7 @@ export const stadiumValidator = z.object({
   type: z.enum(["north_america", "centenario", "custom"]),
   group: z.number(),
   coordinations: z.tuple([z.number(), z.number()]),
-  gameplay: z.instanceof(mongoose.Types.ObjectId).optional(),
+  gameplayId: z.instanceof(mongoose.Types.ObjectId).optional(),
 });
 
 export type IStadium = z.infer<typeof stadiumValidator>;
@@ -24,7 +24,7 @@ const stadiumSchema = new mongoose.Schema<IStadium>({
   type: String,
   coordinations: [Number],
   group: Number,
-  gameplay: mongoose.Types.ObjectId,
+  gameplayId: mongoose.Types.ObjectId,
 });
 
 const Stadium = mongoose.model<IStadium>("Stadium", stadiumSchema);

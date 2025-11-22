@@ -1,5 +1,5 @@
-import { Gameplay, Ranking, Team } from "../models";
 import { BadRequest } from "./httpError";
+import { Gameplay, Ranking, Team } from "../models";
 
 export const populateTeamData = async (teamCode: string, gameplay: string) => {
   const team = await Team.findOne({

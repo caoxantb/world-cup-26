@@ -3,7 +3,7 @@ import { Ranking, Team, TeamStatic } from "../../models";
 export const rankingQueries = {
   teamPastRankings: async (
     parents: undefined,
-    args: { code: String; gameplay?: String }
+    args: { code: string; gameplay?: string }
   ) => {
     const { code, gameplay } = args;
     const rankings = await Ranking.find({

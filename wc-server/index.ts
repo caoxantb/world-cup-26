@@ -1,8 +1,8 @@
 import { expressMiddleware } from "@apollo/server/express4";
 import cookieParser, { CookieParseOptions } from "cookie-parser";
 import cors from "cors";
-import dotenv from "dotenv";
-import express from "express";
+import { config } from "dotenv";
+import express, { json } from "express";
 import http from "http";
 import "express-async-errors";
 
@@ -11,7 +11,7 @@ import { createGraphQLServer } from "./graphql/server";
 import { authenticateUser } from "./middlewares/auth";
 import { errorHandler } from "./middlewares/error";
 
-dotenv.config();
+config();
 
 const initServer = async () => {
   const app = express();
@@ -35,7 +35,7 @@ const initServer = async () => {
 
   app.use(cookieParser(cookieSecret));
   app.use(cors({ credentials: true, origin: true }));
-  app.use(express.json());
+  app.use(json());
   app.use(authenticateUser);
   app.use(
     "/",

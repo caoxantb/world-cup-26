@@ -1,8 +1,8 @@
-import dotenv from "dotenv";
+import { config } from "dotenv";
 import fs from "fs";
 import mongoose from "mongoose";
-import { z } from "zod";
 import stripJsonComments from "strip-json-comments";
+import { z } from "zod";
 
 import { connectDatabase, disconnectDatabase } from "./connection";
 import { getMatchStaticData, getTeamStaticData } from "./scripts/get-static-db";
@@ -15,11 +15,11 @@ import {
 } from "../models";
 import { matchStaticValidator } from "../models/matchStatic";
 import { rankingValidator } from "../models/ranking";
-import { teamStaticValidator } from "../models/teamStatic";
 import { roundStaticValidator } from "../models/roundStatic";
 import { stadiumValidator } from "../models/stadium";
+import { teamStaticValidator } from "../models/teamStatic";
 
-dotenv.config();
+config();
 
 const initCollection = async (
   collection: mongoose.Model<any>,
@@ -58,7 +58,14 @@ const initCollection = async (
           encoding: "utf8",
         })
       )
-    );
+    ).map((venue: any) => ({
+      ...venue,
+      ...(venue.gameplayId && {
+        gameplayId: mongoose.Types.ObjectId.createFromHexString(
+          venue.gameplayId
+        ),
+      }),
+    }));
     // await initCollection(TeamStatic, "TeamStatic", teams, teamStaticValidator);
     // await initCollection(Ranking, "Ranking", rankings, rankingValidator);
     // await initCollection(

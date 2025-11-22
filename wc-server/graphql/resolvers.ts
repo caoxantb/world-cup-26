@@ -3,16 +3,16 @@ import {
   gameplayMutations,
   gameplayQueries,
 } from "./gameplay/gameplayResolvers";
-import { roundQueries, roundMutations } from "./round/roundResolvers";
+import { matchQueries, matchesMutation } from "./match/matchResolvers";
 import { rankingQueries } from "./ranking/rankingResolvers";
+import { roundQueries, roundMutations } from "./round/roundResolvers";
+import { stadiumMutations, stadiumQueries } from "./stadium/stadiumResolvers";
 import {
   teamQueries,
   teamMutations,
   teamTransforms,
 } from "./team/teamResolvers";
 import { userMutations, userQueries } from "./user/userResolvers";
-import { matchQueries, matchesMutation } from "./match/matchResolvers";
-import { stadiumMutations, stadiumQueries } from "./stadium/stadiumResolvers";
 
 const resolvers = {
   Date: dateScalar,

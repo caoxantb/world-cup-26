@@ -1,6 +1,7 @@
 import { z } from "zod";
-import { IStadium, stadiumValidator } from "../../models/stadium";
+
 import { Stadium } from "../../models";
+import { IStadium, stadiumValidator } from "../../models/stadium";
 
 export const stadiumQueries = {
   getAllCurrentGameplayStadiums: async (

@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
-import { TeamStatic } from "../models";
+
 import { range } from ".";
+import { getWorldCupStadiums } from "./stadiumUtils";
 import { getDatetimeWithTimezone, getWorldCupDates } from "../constants/dates";
 import { getStadiums } from "../constants/stadiums";
-import { getWorldCupStadiums } from "./stadiumUtils";
+import { TeamStatic } from "../models";
 
 type TeamXG = {
   xGoalForParams: number[];
@@ -182,7 +183,7 @@ export const penalties = (
       value: boolean;
     }
   ) => {
-    let scored = Math.random() > 0.25 ? 1 : 0;
+    const scored = Math.random() > 0.25 ? 1 : 0;
     teamRes.push(scored);
     scored && teamScore.value++;
     isFinished.value =
@@ -194,8 +195,8 @@ export const penalties = (
   const team1Res: number[] = [];
   const team2Res: number[] = [];
   const team1Score = { value: 0 };
-  let team2Score = { value: 0 };
-  let isFinished = { value: false };
+  const team2Score = { value: 0 };
+  const isFinished = { value: false };
 
   while (
     !isFinished.value &&
@@ -235,6 +236,8 @@ export const scheduleMatches = async (
   const worldCupStadiums = code.startsWith("FIFA")
     ? await getWorldCupStadiums(code, gameplayType, hostsOrdered, gameplayId)
     : undefined;
+
+  console.log("run here?");
 
   const finalVenueCoord = worldCupStadiums
     ? worldCupStadiums.find((s) => s?.group === 1)?.coordinations || []
@@ -383,7 +386,7 @@ export const scheduleMatches = async (
 
 const swapWorldCupMatchNo = (matchNo: number, code: string) => {
   switch (code) {
-    case "FIFA-WC-GS":
+    case "FIFA-WC-GS": {
       const swapGsIdxs = [
         49, 50, 27, 25, 1, 2, 51, 52, 28, 26, 3, 5, 53, 54, 31, 29, 4, 6, 55,
         56, 32, 30, 7, 9, 57, 58, 35, 33, 8, 10, 59, 60, 36, 34, 11, 12, 61, 62,
@@ -391,6 +394,7 @@ const swapWorldCupMatchNo = (matchNo: number, code: string) => {
         44, 42, 19, 20, 69, 70, 47, 45, 21, 22, 71, 72, 48, 46, 23, 24,
       ];
       return swapGsIdxs[matchNo - 1];
+    }
     case "FIFA-WC-R32":
       return matchNo + 72;
     case "FIFA-WC-R16":
@@ -401,7 +405,7 @@ const swapWorldCupMatchNo = (matchNo: number, code: string) => {
       return matchNo + 100;
     case "FIFA-WC-3P":
       return 103;
-    case "FIFA-WC-GS":
+    case "FIFA-WC-F":
       return 104;
     default:
       return matchNo;
