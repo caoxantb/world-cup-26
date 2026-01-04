@@ -1,4 +1,4 @@
-import _ from "lodash";
+import _, { filter } from "lodash";
 import munkres from "munkres";
 import seedrandom from "seedrandom";
 
@@ -146,21 +146,20 @@ const clusteringStadium = (stadiums: IStadium[], k: number = 4) => {
   return { clusteredStadiums, centroids: clusters.centroids };
 };
 
-export const mixClusterStadium = (
+const mixClusterStadium = (
   stadiums: IStadium[],
   preferedHostOrder: string[]
 ) => {
-  const threeMatchStadiums = stadiums.filter((stadium) =>
-    [1, 2, 4, 5, 6].includes(stadium.group)
-  );
-  const fourMatchStadium = stadiums.filter((stadium) =>
-    [3, 7, 8].includes(stadium.group)
-  );
+  const THREE_MATCH = new Set([1, 2, 4, 5, 6]);
+  const FOUR_MATCH = new Set([3, 7, 8]);
 
-  const { clusteredStadiums: clusteredStadiums3, centroids: centroids3 } =
+  const threeMatchStadiums = stadiums.filter((s) => THREE_MATCH.has(s.group));
+  const fourMatchStadiums = stadiums.filter((s) => FOUR_MATCH.has(s.group));
+
+  const { clusteredStadiums: clustered3, centroids: centroids3 } =
     clusteringStadium(threeMatchStadiums);
-  const { clusteredStadiums: clusteredStadiums4, centroids: centroids4 } =
-    clusteringStadium(fourMatchStadium);
+  const { clusteredStadiums: clustered4, centroids: centroids4 } =
+    clusteringStadium(fourMatchStadiums);
 
   const costMatrix = centroids3.map((c1) =>
     centroids4.map((c2) => haversineDistance(c1, c2))
@@ -169,158 +168,243 @@ export const mixClusterStadium = (
   const indices = munkres(costMatrix);
 
   const stadiumGroups = indices.map(([i, j]) => [
-    ...clusteredStadiums3[i],
-    ...clusteredStadiums4[j],
+    ...clustered3[i],
+    ...clustered4[j],
   ]);
 
-  stadiumGroups.sort((group1, group2) => {
-    const group1Host = group1.filter((stadium) => stadium.hostOpeningMatch);
-    const group2Host = group2.filter((stadium) => stadium.hostOpeningMatch);
+  // check only in cases there are 4 stadiums in the same group -> swap one
+  const sourceGroupIndex = stadiumGroups.findIndex(
+    (group) => group.filter((s) => s.hostOpeningMatch).length > 3
+  );
 
-    const hostDiff = group2Host.length - group1Host.length;
-    if (hostDiff !== 0) return hostDiff;
+  if (sourceGroupIndex !== -1) {
+    const sourceGroup = stadiumGroups[sourceGroupIndex];
 
-    const getTopHostIndex = (group: IStadium[]) => {
-      const hostCountries = group
-        .map((s) => s.hostOpeningMatch)
-        .filter(Boolean);
-      const index = preferedHostOrder.findIndex((host) =>
-        hostCountries.includes(host)
-      );
-      return index === -1 ? Infinity : index;
+    const stadiumToSwap = sourceGroup.find(
+      (s) => s.hostOpeningMatch === preferedHostOrder[1]
+    );
+
+    if (stadiumToSwap) {
+      const sameMatchesCount = THREE_MATCH.has(stadiumToSwap.group)
+        ? threeMatchStadiums
+        : fourMatchStadiums;
+
+      const sourceGroupNames = new Set(sourceGroup.map((s) => s.name));
+
+      const closestSwappableStadium = sameMatchesCount.reduce<{
+        stadium: IStadium | null;
+        distance: number;
+      }>(
+        (acc, stadium) => {
+          if (sourceGroupNames.has(stadium.name)) return acc;
+
+          const distance = haversineDistance(
+            stadiumToSwap.coordinations,
+            stadium.coordinations
+          );
+
+          return distance < acc.distance ? { stadium, distance } : acc;
+        },
+        { stadium: null, distance: Number.MAX_SAFE_INTEGER }
+      ).stadium;
+
+      if (closestSwappableStadium) {
+        const targetGroupIndex = stadiumGroups.findIndex((group) =>
+          group.some((s) => s.name === closestSwappableStadium.name)
+        );
+
+        if (targetGroupIndex !== -1) {
+          const targetGroup = stadiumGroups[targetGroupIndex];
+
+          const sourceIndex = sourceGroup.findIndex(
+            (s) => s.name === stadiumToSwap.name
+          );
+          const targetIndex = targetGroup.findIndex(
+            (s) => s.name === closestSwappableStadium.name
+          );
+
+          if (sourceIndex !== -1 && targetIndex !== -1) {
+            sourceGroup[sourceIndex] = closestSwappableStadium;
+            targetGroup[targetIndex] = stadiumToSwap;
+          }
+        }
+      }
+    }
+  }
+
+  stadiumGroups.sort((a, b) => {
+    const bestPreferredIndex = (group: IStadium[]) => {
+      const hosts = group.map((s) => s.hostOpeningMatch).filter(Boolean);
+
+      let bestIndex = Infinity;
+
+      for (const host of hosts) {
+        const index = host ? preferedHostOrder.indexOf(host) : -1;
+        if (index !== -1 && index < bestIndex) {
+          bestIndex = index;
+        }
+      }
+
+      return bestIndex;
     };
-
-    return getTopHostIndex(group1) - getTopHostIndex(group2);
+    return bestPreferredIndex(a) - bestPreferredIndex(b);
   });
 
   return stadiumGroups;
 };
 
+const allocateHostsToGroup = (stadiumGroups: IStadium[][]) => {
+  const groups = stadiumGroups.map((group) =>
+    group.map(({ hostOpeningMatch }) => hostOpeningMatch).filter(Boolean)
+  );
+
+  const hosts = new Map<string, number>();
+  let grIdx = 0;
+
+  for (const group of groups) {
+    for (let i = 0; i < group.length; i++) {
+      hosts.set(group[i] as string, grIdx + i * 2);
+    }
+    grIdx++;
+  }
+
+  return hosts;
+};
+
 const orderStadiumGroups = (group: IStadium[], preferedHostOrder: string[]) => {
-  let s1: IStadium | undefined,
-    s2: IStadium | undefined,
-    s3: IStadium | undefined,
-    s4: IStadium | undefined,
-    s5: IStadium | undefined;
+  let s1: IStadium, s2: IStadium, s3: IStadium, s4: IStadium, s5: IStadium;
+  const THREE_MATCH_GROUPS = [1, 2, 4, 5, 6];
+  const FOUR_MATCH_GROUPS = [3, 7, 8];
+
+  const isThreeMatch = (s: IStadium) => THREE_MATCH_GROUPS.includes(s.group);
+  const isFourMatch = (s: IStadium) => FOUR_MATCH_GROUPS.includes(s.group);
+
+  const orderByCapacityDesc = (a: IStadium, b: IStadium) =>
+    b.capacity - a.capacity;
+
+  const filterStadiumGroup = (stadiumGroup: IStadium[]) => {
+    const stadiums = stadiumGroup.filter((s) => !hostStadiums.includes(s));
+    return stadiums.length === 1 ? stadiums[0] : stadiums;
+  };
 
   const threeMatchStadiums = group
-    .filter((stadium) => [1, 2, 4, 5, 6].includes(stadium.group))
-    .sort((s1, s2) => s2.capacity - s1.capacity);
-  const fourMatchStadiums = group
-    .filter((stadium) => [3, 7, 8].includes(stadium.group))
-    .sort((s1, s2) => s2.capacity - s1.capacity);
-
+    .filter(isThreeMatch)
+    .sort(orderByCapacityDesc);
+  const fourMatchStadiums = group.filter(isFourMatch).sort(orderByCapacityDesc);
   const hostStadiums = group
-    .filter((stadium) => stadium.hostOpeningMatch)
-    .sort((host1, host2) => {
-      const host1Order = preferedHostOrder.findIndex(
-        (host) => host === host1.hostOpeningMatch
-      );
-      const host2Order = preferedHostOrder.findIndex(
-        (host) => host === host2.hostOpeningMatch
-      );
-
-      return host1Order - host2Order;
-    });
+    .filter((s) => s.hostOpeningMatch)
+    .sort(
+      (a, b) =>
+        preferedHostOrder.indexOf(a.hostOpeningMatch!) -
+        preferedHostOrder.indexOf(b.hostOpeningMatch!)
+    );
 
   [s1, s3, s5] = hostStadiums;
+
+  const threeMatchHostStadiums = hostStadiums.filter(isThreeMatch).length;
 
   if (!s1) {
     [s1, s5] = threeMatchStadiums;
     [s3, s2, s4] = fourMatchStadiums;
   } else if (!s3) {
-    if (threeMatchStadiums.includes(s1)) {
+    if (isThreeMatch(s1)) {
       [s3, s2, s4] = fourMatchStadiums;
-      s5 = threeMatchStadiums.find((stadium) => stadium.name != s1?.name);
+      s5 = filterStadiumGroup(threeMatchStadiums) as IStadium;
     } else {
-      [s3, s4] = fourMatchStadiums.filter(
-        (stadium) => stadium.name !== s1?.name
-      );
+      [s3, s4] = filterStadiumGroup(fourMatchStadiums) as IStadium[];
       [s5, s2] = threeMatchStadiums;
     }
   } else if (!s5) {
-    if (threeMatchStadiums.includes(s1) && threeMatchStadiums.includes(s3)) {
-      [s5, s2, s4] = fourMatchStadiums;
-    } else if (threeMatchStadiums.includes(s1)) {
-      s5 = threeMatchStadiums.find((stadium) => stadium.name != s1?.name);
-      [s2, s4] = fourMatchStadiums.filter(
-        (stadium) => stadium.name !== s3?.name
-      );
+    if (threeMatchHostStadiums === 2) [s5, s2, s4] = fourMatchStadiums;
+    else if (isThreeMatch(s1)) {
+      s5 = filterStadiumGroup(threeMatchStadiums) as IStadium;
+      [s2, s4] = filterStadiumGroup(fourMatchStadiums) as IStadium[];
     } else if (threeMatchStadiums.includes(s3)) {
-      s2 = threeMatchStadiums.find((stadium) => stadium.name != s3?.name);
-      [s5, s4] = fourMatchStadiums.filter(
-        (stadium) => stadium.name !== s1?.name
-      );
+      s2 = filterStadiumGroup(threeMatchStadiums) as IStadium;
+      [s5, s4] = filterStadiumGroup(fourMatchStadiums) as IStadium[];
     } else {
-      s4 = fourMatchStadiums.find(
-        (stadium) => stadium.name !== s1?.name && stadium.name !== s3?.name
-      );
+      s4 = filterStadiumGroup(fourMatchStadiums) as IStadium;
       [s5, s2] = threeMatchStadiums;
     }
   } else {
-    if (threeMatchStadiums.includes(s1)) {
-      [s2, s4] = fourMatchStadiums.filter(
-        (stadium) => stadium.name !== s1?.name
-      );
-    } else {
-      s2 = threeMatchStadiums.find((stadium) => stadium.name !== s1?.name);
-      s4 = fourMatchStadiums.find(
-        (stadium) => stadium.name !== s3?.name && stadium.name !== s5?.name
-      );
-    }
+    if (threeMatchHostStadiums === 2)
+      [s2, s4] = filterStadiumGroup(fourMatchStadiums) as IStadium[];
+    else if (threeMatchHostStadiums === 1)
+      if (isThreeMatch(s1)) {
+        s2 = filterStadiumGroup(fourMatchStadiums) as IStadium;
+        s4 = filterStadiumGroup(threeMatchStadiums) as IStadium;
+      } else {
+        s4 = filterStadiumGroup(fourMatchStadiums) as IStadium;
+        s2 = filterStadiumGroup(threeMatchStadiums) as IStadium;
+      }
+    else [s2, s4] = threeMatchStadiums;
   }
 
   return [s1, s2, s3, s4, s5];
 };
 
 const arrangeStadiumsWithinGroup = (stadiums: IStadium[]) => {
-  const [x, y] = [1, 2, 4, 5, 6].includes(stadiums[2].group) ? [5, 3] : [3, 5];
+  const isFourMatches = (type: number) =>
+    [3, 7, 8].includes(stadiums[type - 1].group);
 
   return [
     [
       [1, 2],
-      [x, 4],
-      [y, x],
+      [3, 4],
+      [5, !isFourMatches(3) && !isFourMatches(5) ? 2 : 3],
     ],
     [
-      [x, [1, 2, 4, 5, 6].includes(stadiums[0].group) ? 2 : 1],
-      [4, y],
+      [3, isFourMatches(1) ? 1 : 2],
+      [4, 5],
       [2, 1],
     ],
     [
-      [y, 4],
+      [5, 4],
       [1, 2],
-      [x, 4],
+      [isFourMatches(5) ? 5 : 3, isFourMatches(4) ? 4 : 3],
     ],
   ];
 };
 
-export const allocateStadiumGroups = (
+const allocateStadiumGroups = (
   stadiumGroups: IStadium[][],
   preferedHostOrder: string[]
 ) => {
-  const firstGroupHostNumber = stadiumGroups[0].filter(
-    (stadium) => stadium.hostOpeningMatch
-  ).length;
+  const groupHostNumber = stadiumGroups.map(
+    (group) => group.filter((stadium) => stadium.hostOpeningMatch).length
+  );
 
-  const allocations =
-    firstGroupHostNumber === 1
-      ? [
-          [0, 1, 2, 3],
-          [4, 5, 6, 7],
-          [8, 9, 10, 11],
-        ]
-      : firstGroupHostNumber === 2
-      ? [
-          [0, 2, 3, 4],
-          [1, 5, 6, 7],
-          [8, 9, 10, 11],
-        ]
-      : [
-          [0, 1, 3, 5],
-          [2, 6, 7, 8],
-          [4, 9, 10, 11],
-        ];
+  const allocations: number[][] = Array.from({ length: 3 }, () =>
+    Array(4).fill(-1)
+  );
+  const usedAlloc = new Set();
+  let base = 0;
+
+  for (let i = 0; i < groupHostNumber.length; i++) {
+    if (groupHostNumber[i] === 0) break;
+
+    for (let j = 0; j < groupHostNumber[i]; j++) {
+      const alloc = base + j * 2;
+      allocations[j][i] = alloc;
+      usedAlloc.add(alloc);
+    }
+    do {
+      base++;
+    } while (usedAlloc.has(base));
+  }
+
+  for (let i = 0; i < groupHostNumber.length; i++) {
+    for (let j = 0; j < allocations.length; j++) {
+      if (allocations[i][j] !== -1) continue;
+
+      while (usedAlloc.has(base)) {
+        base++;
+      }
+
+      allocations[i][j] = base;
+      usedAlloc.add(base);
+    }
+  }
 
   const transAllocation = _.zip(...allocations);
 
@@ -356,10 +440,12 @@ export const allocateStadiumGroups = (
     }
   };
 
-  swapMatches(3, 7);
+  swapMatches(3, 19);
   swapMatches(25, 45);
+  // switch F2 and G2
+  [stadiums[12], stadiums[13]] = [stadiums[13], stadiums[12]];
 
-  return { stadiums, firstGroupHostNumber };
+  return stadiums;
 };
 
 export const getWorldCupStadiums = async (
@@ -372,9 +458,9 @@ export const getWorldCupStadiums = async (
     gameplayType === "custom" ? { gameplayId } : { type: gameplayType }
   );
 
-  const stadiumsGroup = mixClusterStadium(stadiums, hosts);
-  const { stadiums: stadiumsByMatch, firstGroupHostNumber } =
-    allocateStadiumGroups(stadiumsGroup, hosts);
+  const stadiumGroups = mixClusterStadium(stadiums, hosts);
+  const groupStageStadiums = allocateStadiumGroups(stadiumGroups, hosts);
+  const hostsGroupIdx = allocateHostsToGroup(stadiumGroups);
 
   switch (code) {
     case "FIFA-INTERPO-SF":
@@ -384,26 +470,16 @@ export const getWorldCupStadiums = async (
     case "FIFA-INTERPO-F":
       return stadiums.filter((stadium) => [1, 2].includes(stadium.group));
     case "FIFA-WC-GS":
-      return stadiumsByMatch;
+      return groupStageStadiums;
     case "FIFA-WC-R32": {
       const r32StadiumsFinal = Array(16).fill("");
       const r32Stadiums = stadiums.filter(
         (stadium) => ![2, 8].includes(stadium.group)
       );
-      const hostStadiumIdx =
-        hosts.length === 1
-          ? [0]
-          : hosts.length === 2
-          ? [0, 1]
-          : hosts.length === 3 && firstGroupHostNumber === 1
-          ? [0, 1, 3]
-          : hosts.length === 3
-          ? [0, 3, 6]
-          : [0, 1, 3, 4, 6, 7];
 
       const usedStadiums = new Set();
 
-      hosts.forEach((host, idx) => {
+      hosts.forEach((host) => {
         const stadium =
           r32Stadiums.find((s) => s.hostOpeningMatch === host) ||
           r32Stadiums
@@ -411,7 +487,9 @@ export const getWorldCupStadiums = async (
             .sort((s1, s2) => s2.capacity - s1.capacity)[0];
 
         if (stadium) {
-          r32StadiumsFinal[hostStadiumIdx[idx]] = stadium;
+          const hostGrIdx = hostsGroupIdx.get(host)!;
+          const hostR32Idx = hostGrIdx + Math.floor(hostGrIdx / 2);
+          r32StadiumsFinal[hostR32Idx] = stadium;
           usedStadiums.add(stadium);
         }
       });

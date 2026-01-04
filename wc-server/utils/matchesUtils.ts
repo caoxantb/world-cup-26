@@ -237,8 +237,6 @@ export const scheduleMatches = async (
     ? await getWorldCupStadiums(code, gameplayType, hostsOrdered, gameplayId)
     : undefined;
 
-  console.log("run here?");
-
   const finalVenueCoord = worldCupStadiums
     ? worldCupStadiums.find((s) => s?.group === 1)?.coordinations || []
     : [];
@@ -389,9 +387,9 @@ const swapWorldCupMatchNo = (matchNo: number, code: string) => {
     case "FIFA-WC-GS": {
       const swapGsIdxs = [
         49, 50, 27, 25, 1, 2, 51, 52, 28, 26, 3, 5, 53, 54, 31, 29, 4, 6, 55,
-        56, 32, 30, 7, 9, 57, 58, 35, 33, 8, 10, 59, 60, 36, 34, 11, 12, 61, 62,
-        39, 37, 13, 14, 63, 64, 40, 38, 15, 16, 65, 66, 43, 41, 17, 18, 67, 68,
-        44, 42, 19, 20, 69, 70, 47, 45, 21, 22, 71, 72, 48, 46, 23, 24,
+        56, 32, 30, 7, 9, 57, 58, 35, 33, 8, 10, 59, 60, 36, 34, 11, 14, 61, 62,
+        39, 37, 12, 13, 63, 64, 40, 38, 15, 17, 65, 66, 43, 41, 16, 18, 67, 68,
+        44, 42, 19, 21, 69, 70, 47, 45, 20, 22, 71, 72, 48, 46, 23, 24,
       ];
       return swapGsIdxs[matchNo - 1];
     }
