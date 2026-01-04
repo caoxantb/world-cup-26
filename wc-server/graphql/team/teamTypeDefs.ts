@@ -4,7 +4,7 @@ const teamTypeDefs = gql`
   scalar Date
 
   extend type Query {
-    teamData(code: String!, gameplay: String!): Team
+    teamData(code: String!): Team
     allTeamsByFederation(
       federation: String
       isSortedByUEFARanking: Boolean

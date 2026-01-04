@@ -16,6 +16,12 @@ export const gameplayQueries = {
 
     if (!gameplay) throw new BadRequest("No gameplay existed");
 
+    res.cookie("gameplay_id", id, {
+      httpOnly: false,
+      sameSite: "lax",
+      path: "/",
+    });
+
     return gameplay;
   },
 };
