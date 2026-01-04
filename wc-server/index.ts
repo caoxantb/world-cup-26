@@ -1,5 +1,5 @@
 import { expressMiddleware } from "@apollo/server/express4";
-import cookieParser, { CookieParseOptions } from "cookie-parser";
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import { config } from "dotenv";
 import express, { json } from "express";

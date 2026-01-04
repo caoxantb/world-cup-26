@@ -25,9 +25,11 @@ export const teamTransforms = {
 export const teamQueries = {
   teamData: async (
     parents: undefined,
-    args: { code: string; gameplay: string }
+    args: { code: string },
+    context: { req: Request; res: Response }
   ) => {
-    const { code, gameplay } = args;
+    const { code } = args;
+    const gameplay = context.req.cookies["gameplay_id"] || "";
 
     const team = await Team.findOne({ code, gameplay })
       .select("currentFIFAPoints")
