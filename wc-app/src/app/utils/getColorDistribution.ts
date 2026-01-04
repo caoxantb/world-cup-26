@@ -49,8 +49,6 @@ export const getColorPercentages = (
           .slice(0, 4)
           .sort((a, b) => b.percentage - a.percentage);
 
-        console.log(colors);
-
         const hexColors = {
           innerLeftWing: colors[0].color,
           innerRightWing:

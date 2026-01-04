@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
+import Navbar from "./components/Navbar";
 
 const nunitoFont = Nunito({
   variable: "--font-nunito",
@@ -29,7 +30,10 @@ export default function RootLayout({
       <body
         className={`${fwc26Font.className} ${nunitoFont.className} antialiased`}
       >
-        {children}
+        <div className="flex min-h-screen flex-col">
+          <Navbar />
+          <main className="flex-1">{children}</main>
+        </div>
       </body>
     </html>
   );
